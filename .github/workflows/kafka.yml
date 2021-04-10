@@ -1,0 +1,19 @@
+on: workflow_dispatch
+defaults:
+  run:
+    working-directory: kafka
+jobs:
+  IBM:
+    env:
+      api_key: ${{ secrets.API_KEY }}
+    strategy:
+      matrix:
+        node-version: [ 8.x, 14.x ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i
+      - run: npm test
