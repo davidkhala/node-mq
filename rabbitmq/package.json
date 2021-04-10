@@ -1,0 +1,10 @@
+{
+  "name": "khala-rabbitmq",
+  "version": "0.0.0",
+  "dependencies": {
+    "amqplib": "^0.5.5"
+  },
+  "devDependencies": {
+    "mocha": "latest"
+  }
+}

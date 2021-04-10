@@ -1,0 +1,9 @@
+{
+  "name": "khala-kafka",
+  "version": "0.0.0",
+  "author": "david Liu  <david-khala@hotmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "kafka-node": "^4.1.3"
+  }
+}

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  activemq-classic-mysql:
+    image: davidkhala/activemq-mysql
+    ports:
+      - 61616:61616 # JMS
+      - 8161:8161 # UI
+      - 5672:5672 # AMQP
+      - 61613:61613 # STOMP
+      - 1883:1883 # MQTT
+      - 61614:61614 # WS

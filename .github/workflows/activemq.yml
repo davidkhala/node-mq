@@ -1,0 +1,2 @@
+#- run: cd activemq; docker build --tag=davidkhala/activemq-mysql . ;cd -
+#- run: cd activemq/test;docker-compose up -d; npm test; cd -

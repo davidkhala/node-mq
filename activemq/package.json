@@ -1,0 +1,9 @@
+{
+  "name": "khala-activemq",
+  "version": "0.0.0",
+  "dependencies": {
+    "@stomp/stompjs": "^5.4.2",
+    "text-encoding": "^0.7.0",
+    "ws": "^7.1.2"
+  }
+}

@@ -1,0 +1,5 @@
+services:
+  kafka:
+    image: bitnami/kafka
+    ports:
+      - "2181:2181"
