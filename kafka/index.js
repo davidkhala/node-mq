@@ -6,9 +6,9 @@ class KafkaManager {
     /**
      *
      * @param {string[]} brokers
-     * @param {string} username
-     * @param {string} password
-     * @param clientId
+     * @param {string} [username]
+     * @param {string} [password]
+     * @param {string} [clientId] default to "kafkajs"
      */
     constructor(brokers, {username, password, clientId} = {}) {
         const config = {

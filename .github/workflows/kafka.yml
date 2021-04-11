@@ -1,14 +1,21 @@
-on: workflow_dispatch
+name: kafka
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '* * * * 0'
 defaults:
   run:
     working-directory: kafka
 jobs:
   IBM:
+    environment: IBMEventStreams
     env:
       api_key: ${{ secrets.API_KEY }}
     strategy:
       matrix:
-        node-version: [ 8.x, 14.x ]
+        node-version: [ 10.x, 14.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
