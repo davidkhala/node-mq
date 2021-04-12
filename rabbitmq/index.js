@@ -10,7 +10,6 @@ class AMPQ {
 			const {domain = 'localhost', username, password} = opts;
 			this.url = `amqp://${username}:${password}@${domain}:5672`;
 		} else {
-			// If the URI is omitted entirely, it will default to 'amqp://localhost'
 			this.url = 'amqp://localhost';
 		}
 
