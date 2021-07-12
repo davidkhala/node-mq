@@ -10,3 +10,8 @@
  
 ## Cloud Native
 - [IBM: Messages for RabbitMQ](https://cloud.ibm.com/catalog/services/messages-for-rabbitmq)
+- GCP
+    - [docker-containerized RabbitMQ](https://console.cloud.google.com/marketplace/product/google/rabbitmq3)
+    - [VM: RabbitMQ Certified by Bitnami](https://console.cloud.google.com/marketplace/product/bitnami-launchpad/rabbitmq)
+    - [GKE: RabbitMQ Cluster](https://console.cloud.google.com/marketplace/product/google/rabbitmq)
+
