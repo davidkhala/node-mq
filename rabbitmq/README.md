@@ -14,4 +14,5 @@
     - [docker-containerized RabbitMQ](https://console.cloud.google.com/marketplace/product/google/rabbitmq3)
     - [VM: RabbitMQ Certified by Bitnami](https://console.cloud.google.com/marketplace/product/bitnami-launchpad/rabbitmq)
     - [GKE: RabbitMQ Cluster](https://console.cloud.google.com/marketplace/product/google/rabbitmq)
-
+- AWS
+    - [Bitnami packaged](https://aws.amazon.com/marketplace/pp/prodview-o7lo2xvhbhnde)
