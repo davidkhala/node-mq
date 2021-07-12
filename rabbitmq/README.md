@@ -16,3 +16,4 @@
     - [GKE: RabbitMQ Cluster](https://console.cloud.google.com/marketplace/product/google/rabbitmq)
 - AWS
     - [Bitnami packaged](https://aws.amazon.com/marketplace/pp/prodview-o7lo2xvhbhnde)
+    - [Amazon MQ 是 Apache ActiveMQ 和 RabbitMQ 的托管消息代理服务](https://aws.amazon.com/amazon-mq/)
