@@ -17,3 +17,5 @@
 - AWS
     - [Bitnami packaged](https://aws.amazon.com/marketplace/pp/prodview-o7lo2xvhbhnde)
     - [Amazon MQ 是 Apache ActiveMQ 和 RabbitMQ 的托管消息代理服务](https://aws.amazon.com/amazon-mq/)
+- Azure
+    - [Bitnami packaged](https://portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/bitnami.rabbitmq/product/)
