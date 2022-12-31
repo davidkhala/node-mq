@@ -1,10 +1,6 @@
 name: kafka
 on:
   push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 0 * * 0'
 defaults:
   run:
     working-directory: kafka
@@ -15,7 +11,7 @@ jobs:
       api_key: ${{ secrets.API_KEY }}
     strategy:
       matrix:
-        node-version: [ 12.x, 14.x ]
+        node-version: [ 14.x, 18.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +27,7 @@ jobs:
       authToken: ${{ secrets.AUTH_TOKEN }}
     strategy:
       matrix:
-        node-version: [ 12.x, 14.x ]
+        node-version: [ 14.x, 18.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

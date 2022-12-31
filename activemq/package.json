@@ -1,6 +1,9 @@
 {
   "name": "@davidkhala/activemq",
   "version": "0.0.0",
+  "scripts": {
+    "test": "mocha test"
+  },
   "dependencies": {
     "@stomp/stompjs": "latest",
     "ws": "latest"

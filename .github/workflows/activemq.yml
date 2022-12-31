@@ -1,2 +1,21 @@
-#- run: cd activemq; docker build --tag=davidkhala/activemq-mysql . ;cd -
-#- run: cd activemq/test;docker-compose up -d; npm test; cd -
+name: activemq
+on:
+  push:
+defaults:
+  run:
+    working-directory: activemq
+jobs:
+  localhost:
+    strategy:
+      matrix:
+        node-version: [ 14.x, 18.x ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i
+      - run: ./run.sh
+        working-directory: activemq/Docker
+      - run: npm test
