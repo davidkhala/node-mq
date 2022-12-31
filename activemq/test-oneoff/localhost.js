@@ -1,9 +1,9 @@
-import {STOMP} from '../stomp.js';
+import {Websocket} from '../websocket.js';
 
 describe('localhost', function (){
 	this.timeout(0)
 	const brokerURL = 'ws://localhost:61614';
-	const conn = new STOMP(brokerURL);
+	const conn = new Websocket(brokerURL);
 	it('listen', async ()=>{
 		const topic = 'a';
 		await conn.connect();

@@ -5,7 +5,7 @@ import assert from 'assert'
 
 const {Client, Message} = stompJs
 
-export class STOMP {
+export class Websocket {
 
     constructor(brokerURL, logger = console) {
         assert.ok(typeof brokerURL === 'string', `typeof brokerURL !== 'string'`)
@@ -61,6 +61,12 @@ export class STOMP {
         this.client._changeState(ActivationState.ACTIVE);
 
         await this.client._connect();
+        return new Promise((resolve, reject) => {
+            this.onConnect = (frame) => {
+                const {command} = frame
+                command === 'CONNECTED' ? resolve() : reject(frame)
+            }
+        })
 
     }
 
@@ -114,7 +120,7 @@ export class STOMP {
         this.client.unsubscribe(subscriptionID)
     }
 
-    async close() {
+    async disconnect() {
         await this.client.deactivate();
         this.client.onWebSocketClose = () => {
             delete this.client.onConnect;
