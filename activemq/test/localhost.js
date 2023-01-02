@@ -1,7 +1,8 @@
 import {Websocket} from '../websocket.js';
 import {sleep} from '@davidkhala/light/index.js'
 
-describe('localhost', function () {
+
+describe('websocket', function () {
     this.timeout(0)
     const brokerURL = 'ws://localhost:61614';
     const conn = new Websocket(brokerURL);

@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "@davidkhala/light": "latest",
-    "mocha": "latest"
+    "mocha": "latest",
+    "stomp-client": "latest"
   },
   "type": "module"
 }
