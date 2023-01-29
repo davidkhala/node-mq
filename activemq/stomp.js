@@ -1,8 +1,5 @@
-import {TCPWrapper} from '@stomp/stompjs';
-// import CJS from '@stomp/stompjs/bundles/tcp-wrapper.cjs'
+import {TCPWrapper} from '@stomp/tcp-wrapper';
 import {BaseClient} from './index.js'
-
-// const {TCPWrapper} = CJS;
 
 export class STOMPClient extends BaseClient {
     constructor(host, logger) {

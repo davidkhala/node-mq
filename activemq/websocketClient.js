@@ -1,10 +1,10 @@
-import {ActivationState, BaseClient} from "./index.js";
+import {BaseClient} from "./index.js";
 import WebSocket from 'ws'
 import assert from 'assert'
 
 export class WebsocketClient extends BaseClient {
 
-    constructor(host, logger ) {
+    constructor(host, logger) {
         super(host, logger)
 
         const brokerURL = `ws://${host}:61614`
@@ -29,44 +29,7 @@ export class WebsocketClient extends BaseClient {
         this.client.onStompError = listener;
     }
 
-    set onConnect(listener) {
-        this.client.onConnect = listener
-    }
 
-    async connect() {
-
-        if (this.client.state === ActivationState.DEACTIVATING) {
-            throw new Error('Still DEACTIVATING, can not activate now');
-        }
-
-        if (this.client.active) {
-            this.client.debug('Already ACTIVE, ignoring request to activate');
-            return;
-        }
-
-        this.client._changeState(ActivationState.ACTIVE);
-
-        await this.client._connect();
-        return new Promise((resolve, reject) => {
-            this.onConnect = (frame) => {
-                const {command} = frame
-                command === 'CONNECTED' ? resolve() : reject(frame)
-            }
-        })
-
-    }
-
-    send(topic, message) {
-        assert.ok(typeof topic === 'string', `Invalid destination type:${typeof topic}`)
-        assert.ok(typeof message === 'string', `Invalid body type:${typeof message}`)
-
-        this.client.publish({
-            destination: topic,
-            body: message,
-            // skipContentLengthHeader: true, // TODO ??
-            // headers: {'priority': '9'} // TODO ??
-        });
-    }
 
     /**
      *
@@ -107,7 +70,7 @@ export class WebsocketClient extends BaseClient {
     }
 
     async disconnect() {
-        await this.client.deactivate();
+        await super.disconnect()
         this.client.onWebSocketClose = () => {
             delete this.client.onConnect;
             delete this.client.onStompError;

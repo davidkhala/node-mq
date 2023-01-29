@@ -5,7 +5,8 @@
     "test": "mocha test"
   },
   "dependencies": {
-    "@stomp/stompjs": "^7.0.0-beta4",
+    "@stomp/stompjs": "latest",
+    "@stomp/tcp-wrapper": "latest",
     "ws": "latest"
   },
   "devDependencies": {
