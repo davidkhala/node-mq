@@ -5,7 +5,7 @@
     "test": "mocha test"
   },
   "dependencies": {
-    "@stomp/stompjs": "latest",
+    "@stomp/stompjs": "^7.0.0-beta4",
     "ws": "latest"
   },
   "devDependencies": {

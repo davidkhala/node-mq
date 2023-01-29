@@ -1,27 +1,13 @@
-import stompJs from '@stomp/stompjs';
-import {ActivationState} from "./index.js";
+import {ActivationState, BaseClient} from "./index.js";
 import WebSocket from 'ws'
 import assert from 'assert'
 
-const {Client, Message} = stompJs
+export class WebsocketClient extends BaseClient {
 
-export class Websocket {
+    constructor(host, logger ) {
+        super(host, logger)
 
-    constructor(brokerURL, logger = console) {
-        assert.ok(typeof brokerURL === 'string', `typeof brokerURL !== 'string'`)
-
-        this.client = new Client({
-            brokerURL,
-            debug: logger.debug,
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            connectHeaders: {
-                login: "user",
-                passcode: "password"
-            },
-        });
-
+        const brokerURL = `ws://${host}:61614`
         this.client.webSocketFactory = () => {
             return new WebSocket(brokerURL, this.client.stompVersions.protocolVersions())
         }

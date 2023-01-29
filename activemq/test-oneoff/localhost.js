@@ -1,9 +1,9 @@
-import {Websocket} from '../websocket.js';
+import {WebsocketClient} from '../websocketClient.js';
 
 describe('localhost', function (){
 	this.timeout(0)
 	const brokerURL = 'ws://localhost:61614';
-	const conn = new Websocket(brokerURL);
+	const conn = new WebsocketClient(brokerURL);
 	it('listen', async ()=>{
 		const topic = 'a';
 		await conn.connect();

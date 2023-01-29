@@ -1,11 +1,24 @@
-import {Websocket} from '../websocket.js';
+import {WebsocketClient} from '../websocketClient.js';
+import {STOMPClient} from '../stomp.js'
 import {sleep} from '@davidkhala/light/index.js'
 
+describe('STOMP', function () {
+    this.timeout(0)
+    it('connect', async () => {
+        const host = 'localhost';
+        const client = new STOMPClient(host)
+        await client.connect()
+
+        client.send('a', 'b')
+        await client.disconnect()
+    })
+
+})
 
 describe('websocket', function () {
     this.timeout(0)
-    const brokerURL = 'ws://localhost:61614';
-    const conn = new Websocket(brokerURL);
+    const host = 'localhost';
+    const conn = new WebsocketClient(host);
 
     it('selfSendReceive', async () => {
         await conn.connect()
