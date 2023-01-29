@@ -12,7 +12,7 @@ export const ActivationState = {
 }
 
 export class BaseClient {
-    constructor(host, logger = console) {
+    constructor(host, {username, password} = {}, logger = console) {
         assert.ok(typeof host === 'string', `typeof host !== 'string'`)
 
         this.client = new Client({
@@ -20,14 +20,18 @@ export class BaseClient {
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
-            connectHeaders: {
-                login: "user",
-                passcode: "password"
-            },
+            connectHeaders: {},
         });
+        if (username) {
+            this.client.connectHeaders.login = username
+        }
+        if (password) {
+            this.client.connectHeaders.passcode = password
+        }
         this.host = host
 
     }
+
     async connect() {
 
         if (this.client.state === ActivationState.DEACTIVATING) {
@@ -38,6 +42,11 @@ export class BaseClient {
             this.client.debug('Already ACTIVE, ignoring request to activate');
             return;
         }
+
+        this.client.onWebSocketClose = (err, ...others) => {
+            console.error('onWebSocketClose', err, ...others)
+        };
+
 
         this.client._changeState(ActivationState.ACTIVE);
 
@@ -50,12 +59,15 @@ export class BaseClient {
         })
 
     }
+
     async disconnect() {
         await this.client.deactivate();
     }
+
     set onConnect(listener) {
         this.client.onConnect = listener
     }
+
     send(topic, message) {
         assert.ok(typeof topic === 'string', `Invalid destination type:${typeof topic}`)
         assert.ok(typeof message === 'string', `Invalid body type:${typeof message}`)

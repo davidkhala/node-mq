@@ -4,8 +4,8 @@ import assert from 'assert'
 
 export class WebsocketClient extends BaseClient {
 
-    constructor(host, logger) {
-        super(host, logger)
+    constructor(host, username, password, logger) {
+        super(host, {username, password}, logger)
 
         const brokerURL = `ws://${host}:61614`
         this.client.webSocketFactory = () => {
@@ -28,7 +28,6 @@ export class WebsocketClient extends BaseClient {
     set onError(listener) {
         this.client.onStompError = listener;
     }
-
 
 
     /**

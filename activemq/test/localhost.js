@@ -20,19 +20,11 @@ describe('websocket', function () {
     const host = 'localhost';
     const conn = new WebsocketClient(host);
 
-    it('selfSendReceive', async () => {
+    it('connect', async () => {
         await conn.connect()
 
         conn.send('a', 'b')
         await conn.disconnect()
-        // const listener = conn.subscribe(topic, async ({body, headers}) => {
-        //     console.log({body, headers});
-        //     listener.unsubscribe();
-        //     await conn.close();
-        // });
-
-        // conn.send(topic, 'b');
-        // await sleep(5000);
 
     })
 })
