@@ -12,7 +12,7 @@ jobs:
         with:
           repository: davidkhala/mq
           path: mq
-      - run: pwd; echo $pwd
+      - run: pwd
       - run: /home/runner/work/mq/mq/activeMQ/Docker/run.sh
       - uses: actions/checkout@main
       - uses: actions/setup-node@main
