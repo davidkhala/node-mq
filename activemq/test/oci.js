@@ -3,7 +3,7 @@ import {STOMPClient} from '../stomp.js'
 describe('raw tcp', function () {
     this.timeout(0)
 
-    it('connect', async () => {
+    it.skip('connect', async () => {
 
         const destination = '/queue/someQueueName';
         const user = 'oracleidentitycloudservice/david.yx.liu@oracle.com'
