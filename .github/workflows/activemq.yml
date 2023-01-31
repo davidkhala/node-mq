@@ -6,16 +6,17 @@ defaults:
     working-directory: activemq
 jobs:
   localhost:
-    strategy:
-      matrix:
-        node-version: [ 14.x, 18.x ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@main
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm i
+          repository: davidkhala/mq
+          path: mq
       - run: ./run.sh
-        working-directory: activemq/Docker
+        working-directory: activeMQ/Docker
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 18.x
+      - run: npm i
       - run: npm test
