@@ -9,30 +9,23 @@ jobs:
     environment: IBMEventStreams
     env:
       api_key: ${{ secrets.API_KEY }}
-    strategy:
-      matrix:
-        node-version: [ 14.x, 18.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@main
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: lts
       - run: npm i
       - run: npm run IBM
   oracle:
     environment: OCIStreaming
     env:
-      username: ${{ secrets.USERNAME }}
       authToken: ${{ secrets.AUTH_TOKEN }}
-    strategy:
-      matrix:
-        node-version: [ 14.x, 18.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@main
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: lts
       - run: npm i
       - run: npm run oracle
