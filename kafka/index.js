@@ -1,7 +1,7 @@
-const {Kafka} = require('kafkajs')
+import {Kafka} from 'kafkajs'
 
 
-class KafkaManager {
+export default class KafkaManager {
 
     /**
      *
@@ -51,5 +51,3 @@ class KafkaManager {
 
 
 }
-
-module.exports = KafkaManager

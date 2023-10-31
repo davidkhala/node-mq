@@ -1,11 +1,15 @@
-const KafkaManager = require('../index')
-const assert = require('assert')
+import KafkaManager from '../index.js'
+import assert from 'assert'
 
 describe('Oracle Streaming', function () {
-    this.timeout(30000)
+    this.timeout(0)
 
-    const kafka_brokers_sasl = ['cell-1.streaming.us-ashburn-1.oci.oraclecloud.com:9092']
-    const {username} = process.env
+
+
+    const kafka_brokers_sasl = ['cell-1.streaming.ap-singapore-1.oci.oraclecloud.com:9092']
+    // Your username must be in the format: tenancyName/domain/username/streamPool-ocid
+    const username = 'davidkhala2021/OracleIdentityCloudService/davidkhala@gmail.com/ocid1.streampool.oc1.ap-singapore-1.amaaaaaaulaazmqarbifzdl6n6ml2nfjykqbvawf6fnfwnistfwdvz32aqda'
+    // https://docs.oracle.com/en-us/iaas/Content/Streaming/Tasks/kafkacompatibility_topic-Configuration.htm#configuration
     // The AuthToken is managed in OCI User console, not OCI IDCS password
     const password = process.env.authToken
 
@@ -17,8 +21,9 @@ describe('Oracle Streaming', function () {
         const client = new KafkaManager(kafka_brokers_sasl, {username, password})
 
         await client.connect()
-        const result = await client.listTopics()
-        assert.strictEqual(result[0], 'kafka')
+        const topics = await client.listTopics()
+
+        assert.ok(topics.includes('streaming'))
         await client.disconnect()
     })
 })

@@ -1,4 +1,4 @@
-const AMPQlib = require('amqplib');
+import AMPQlib from 'amqplib';
 
 class AMPQ {
 	/**

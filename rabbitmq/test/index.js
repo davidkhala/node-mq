@@ -1,4 +1,4 @@
-const {AMPQ} = require('../index');
+import {AMPQ} from '../index.js';
 const instance = new AMPQ({username: 'user', password: 'bitnami'});
 const topic = 'tasks';
 describe('rabbit MQ', () => {
