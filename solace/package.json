@@ -1,0 +1,12 @@
+{
+  "name": "@davidkhala/solace",
+  "version": "1.0.0",
+  "dependencies": {
+    "solclientjs": "latest",
+    "@davidkhala/db": "latest"
+  },
+  "type": "module",
+  "devDependencies": {
+    "mocha": "latest"
+  }
+}
