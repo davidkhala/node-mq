@@ -36,7 +36,10 @@ describe('', function () {
 	it('sub', async () => {
 
 		await sub.connect();
-		sub.subscribe(topicName)
+		await sub.subscribe(topicName, true);
+
+
+		await sub.disconnect();
 
 	});
 	it('stop', async () => {
