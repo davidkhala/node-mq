@@ -7,6 +7,9 @@
   },
   "type": "module",
   "devDependencies": {
-    "mocha": "latest"
+    "mocha": "latest",
+    "@davidkhala/docker": "latest",
+    "@davidkhala/container": "latest",
+    "@davidkhala/light": "^0.2.4"
   }
 }
