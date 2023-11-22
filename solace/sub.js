@@ -5,6 +5,10 @@ const {SessionEventCode, SolclientFactory, Message} = Solace;
 
 export class Sub extends SolaceConnect {
 
+	constructor(...props) {
+		super(...props);
+		this.timeout = 10000;
+	}
 
 	/**
 	 *
@@ -27,7 +31,7 @@ export class Sub extends SolaceConnect {
 				SolclientFactory.createTopicDestination(topicName),
 				true, // generate confirmation when subscription is added successfully
 				topicName, // use topic name as correlation key
-				10000 // 10 seconds timeout for this operation
+				this.timeout
 			);
 			this.connection.on(SessionEventCode.SUBSCRIPTION_ERROR, (sessionEvent) => {
 				reject(sessionEvent);
@@ -55,7 +59,7 @@ export class Sub extends SolaceConnect {
 			SolclientFactory.createTopicDestination(topicName),
 			true, // generate confirmation when subscription is removed successfully
 			topicName, // use topic name as correlation key
-			10000 // 10 seconds timeout for this operation
+			this.timeout
 		);
 	}
 

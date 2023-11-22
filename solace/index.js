@@ -6,8 +6,6 @@ const {
 	SolclientFactoryProfiles,
 	SolclientFactory,
 	SessionEventCode,
-	LogLevel,
-	ErrorSubcode
 } = Solace;
 
 export class SolaceConnect extends DB {
