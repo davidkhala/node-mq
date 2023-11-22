@@ -1,6 +1,6 @@
 {
   "name": "@davidkhala/solace",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "solclientjs": "latest",
     "@davidkhala/db": "latest"
@@ -11,5 +11,8 @@
     "@davidkhala/docker": "latest",
     "@davidkhala/container": "latest",
     "@davidkhala/light": "^0.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
