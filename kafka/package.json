@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha test",
     "IBM": "mocha test/IBM.js",
-    "oracle": "mocha test/oracle.js"
+    "oracle": "mocha test/oracle.js",
+    "test:local": "mocha test/localhost.js"
   },
   "devDependencies": {
     "mocha": "latest"

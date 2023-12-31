@@ -11,7 +11,7 @@ jobs:
       api_key: ${{ secrets.API_KEY }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
           node-version: latest
@@ -23,9 +23,18 @@ jobs:
       authToken: ${{ secrets.AUTH_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
           node-version: latest
       - run: npm i
       - run: npm run oracle
+  local:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: davidkhala/setup-dockerode@main
+    - run: |
+        curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/kafka/docker-compose/bitnami/docker-compose.yml > docker-compose.yml
+        docker-compose up -d
+    - run: npm i
+    - run: npm run test:local
