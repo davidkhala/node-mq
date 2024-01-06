@@ -26,27 +26,29 @@ export default class KafkaManager {
             })
         }
         this.kafkaManager = new Kafka(config)
-        this._admin = this.admin();
     }
 
-    admin() {
-        return this.kafkaManager.admin()
+    get admin() {
+        if (!this._admin) {
+            this._admin = this.kafkaManager.admin()
+        }
+        return this._admin
     }
 
     async connect() {
-        await this._admin.connect()
+        await this.admin.connect()
     }
 
     async disconnect() {
-        await this._admin.disconnect()
+        await this.admin.disconnect()
     }
 
     async listTopics() {
-        return this._admin.listTopics()
+        return this.admin.listTopics()
     }
 
     producer() {
-        return kafka.producer()
+        return this.kafkaManager.producer()
     }
 
 
