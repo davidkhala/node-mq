@@ -28,3 +28,12 @@ jobs:
       - run: sleep 15
       - run: npm i
       - run: npm test
+  solace:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solace
+    steps:
+      - uses: davidkhala/setup-dockerode@main
+      - run: npm i
+      - run: npm test

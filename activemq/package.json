@@ -13,5 +13,8 @@
     "@davidkhala/light": "latest",
     "mocha": "latest"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module"
 }
