@@ -39,3 +39,16 @@ jobs:
     - run: sleep 7
     - run: npm i
     - run: npm run test:local
+  pulsar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pulsar
+    steps:
+      - uses: davidkhala/setup-dockerode@main
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/pulsar/docker-compose.yml > docker-compose.yml
+          docker compose up -d
+      - run: sleep 7
+      - run: npm i
+      - run: npm test

@@ -5,6 +5,9 @@
     "solclientjs": "latest",
     "@davidkhala/db": "latest"
   },
+  "scripts": {
+    "test": "mocha test"
+  },
   "type": "module",
   "devDependencies": {
     "mocha": "latest",
