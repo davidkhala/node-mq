@@ -3,6 +3,7 @@ import {Pub} from '../pub.js';
 import {docker} from './recipe.js';
 import {ContainerManager} from '@davidkhala/docker/docker.js';
 import {Sub} from '../sub.js';
+import {sleep} from '@davidkhala/light/index.js';
 
 describe('', function () {
 	this.timeout(0);
@@ -12,12 +13,16 @@ describe('', function () {
 	const connect = new SolaceConnect({username, password, vpn}, console);
 	let stop = () => {
 	};
-	it('run', async () => {
+	before(async () => {
 		const manager = new ContainerManager();
 		stop = await docker(manager, {
 			username,
 			password,
 		});
+		await sleep(30000);
+	});
+	after(async () => {
+		await stop();
 	});
 	it('reconnect', async () => {
 		await connect.disconnect();
@@ -32,18 +37,14 @@ describe('', function () {
 		pub.publish(topicName, 'funk');
 		await pub.disconnect();
 	});
-	const sub = new Sub({username, password, vpn}, console);
-	it('sub', async () => {
-
+	it.skip('sub', async () => {// oneoff subscribe
+		const sub = new Sub({username, password, vpn}, console);
 		await sub.connect();
 		await sub.subscribe(topicName, true);
 
 
 		await sub.disconnect();
 
-	});
-	it('stop', async () => {
-		await stop();
 	});
 
 });
