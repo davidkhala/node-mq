@@ -34,6 +34,14 @@ jobs:
       run:
         working-directory: solace
     steps:
-      - uses: davidkhala/setup-dockerode@main
+      - uses: actions/checkout@main
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/solace/docker-compose.yml > docker-compose.yml
+          docker compose up -d
+      - uses: actions/setup-node@main
+        with:
+          check-latest: true
+          node-version: lts/*
       - run: npm i
+      - run: sleep 15
       - run: npm test

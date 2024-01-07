@@ -14,12 +14,14 @@ describe('', function () {
 	let stop = () => {
 	};
 	before(async () => {
-		const manager = new ContainerManager();
-		stop = await docker(manager, {
-			username,
-			password,
-		});
-		await sleep(30000);
+		if (!process.env.CI) {
+			const manager = new ContainerManager();
+			stop = await docker(manager, {
+				username,
+				password,
+			});
+			await sleep(30000);
+		}
 	});
 	after(async () => {
 		await stop();
@@ -37,14 +39,14 @@ describe('', function () {
 		pub.publish(topicName, 'funk');
 		await pub.disconnect();
 	});
-	it.skip('sub', async () => {// oneoff subscribe
-		const sub = new Sub({username, password, vpn}, console);
-		await sub.connect();
-		await sub.subscribe(topicName, true);
+	if (!process.env.CI) {
+		it('sub', async () => {// oneoff subscribe
+			const sub = new Sub({username, password, vpn}, console);
+			await sub.connect();
+			await sub.subscribe(topicName, true);
+			await sub.disconnect();
 
-
-		await sub.disconnect();
-
-	});
+		});
+	}
 
 });
