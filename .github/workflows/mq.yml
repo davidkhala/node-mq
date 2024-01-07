@@ -12,7 +12,7 @@ jobs:
       - uses: davidkhala/setup-dockerode@main
       - run: |
           curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/activeMQ/docker-compose.yml > docker-compose.yml
-          docker-compose up -d
+          docker compose up -d
       - run: npm i
       - run: npm test
   rabbitmq:
@@ -24,7 +24,7 @@ jobs:
       - uses: davidkhala/setup-dockerode@main
       - run: |
           curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/rabbitmq/docker-compose.yml > docker-compose.yml
-          docker-compose up -d
-          sleep 6
+          docker compose up -d
+      - run: sleep 7
       - run: npm i
       - run: npm test

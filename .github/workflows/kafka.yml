@@ -35,6 +35,7 @@ jobs:
     - uses: davidkhala/setup-dockerode@main
     - run: |
         curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/kafka/bitnami/docker-compose.yml > docker-compose.yml
-        docker-compose up -d
+        docker compose up -d
+    - run: sleep 7
     - run: npm i
     - run: npm run test:local
