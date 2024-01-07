@@ -5,19 +5,16 @@ on:
 jobs:
   activemq:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: activemq
     steps:
-      - uses: actions/checkout@main
-        with:
-          repository: davidkhala/mq
-      - run: ./activeMQ/Docker/run.sh
-      - uses: actions/checkout@main
-      - uses: actions/setup-node@main
-        with:
-          node-version: 18.x
+      - uses: davidkhala/setup-dockerode@main
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/activeMQ/docker-compose.yml > docker-compose.yml
+          docker-compose up -d
       - run: npm i
-        working-directory: activemq
       - run: npm test
-        working-directory: activemq
   rabbitmq:
     runs-on: ubuntu-latest
     defaults:
