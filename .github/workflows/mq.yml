@@ -1,9 +1,9 @@
-name: activemq
+name: mq
 on:
   push:
 
 jobs:
-  localhost:
+  activemq:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
@@ -18,3 +18,15 @@ jobs:
         working-directory: activemq
       - run: npm test
         working-directory: activemq
+  rabbitmq:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rabbitmq
+    steps:
+      - uses: davidkhala/setup-dockerode@main
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/rabbitmq/docker-compose.yml > docker-compose.yml
+          docker-compose up -d
+      - run: npm i
+      - run: npm test

@@ -1,10 +1,18 @@
 {
-  "name": "khala-rabbitmq",
-  "version": "0.0.0",
+  "name": "@davidkhala/rabbitmq",
+  "version": "0.1.0",
   "dependencies": {
-    "amqplib": "^0.5.5"
+    "amqplib": "latest",
+    "@davidkhala/pubsub": "latest"
+  },
+  "scripts": {
+    "test": "mocha test"
   },
   "devDependencies": {
     "mocha": "latest"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module"
 }

@@ -1,22 +1,24 @@
 import {AMPQ} from '../index.js';
-const instance = new AMPQ({username: 'user', password: 'bitnami'});
+import assert from 'assert';
+
 const topic = 'tasks';
 describe('rabbit MQ', () => {
-    before(async () => {
-        await instance.connect();
-    })
+	// const userInstance = new AMPQ({username: 'user', password: 'bitnami'});
+	const bitnamiContainer = new AMPQ({username: 'user', password: 'bitnami'});
+	before(async () => {
+		await bitnamiContainer.connect();
+	});
 
-    it('subscribe and send', async () => {
-        const listener = async (message) => {
-            if (message) {
-                console.log(message.content.toString());
-                instance.ack(message);
-            }
-        };
-        await instance.subscribe(topic, listener);
-        await instance.send(topic, 'b');
-    })
-    after(async () => {
-        await instance.close()
-    })
-})
+	it('subscribe and send', async () => {
+		const message = 'b';
+		const listener = async (received) => {
+			assert.strictEqual(received, message);
+			bitnamiContainer.ack(received);
+		};
+		await bitnamiContainer.subscribe(topic, listener);
+		await bitnamiContainer.send(topic, message);
+	});
+	after(async () => {
+		await bitnamiContainer.close();
+	});
+});

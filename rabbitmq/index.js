@@ -1,18 +1,9 @@
-import AMPQlib from 'amqplib';
+import AMPQLibrary from 'amqplib';
+import MQ from '@davidkhala/pubsub';
 
-class AMPQ {
-	/**
-	 *
-	 * @param {{domain:string, username:string, password:string}} opts
-	 */
-	constructor(opts) {
-		if (opts) {
-			const {domain = 'localhost', username, password} = opts;
-			this.url = `amqp://${username}:${password}@${domain}:5672`;
-		} else {
-			this.url = 'amqp://localhost';
-		}
-
+export class AMPQ extends MQ {
+	constructor({domain = 'localhost', port = 5672, password, username} = {}, logger) {
+		super({domain, username, password, port, dialect: 'amqp'}, undefined, logger);
 	}
 
 	async send(topic, message) {
@@ -29,13 +20,14 @@ class AMPQ {
 		this.channel.ack(message);
 	}
 
-	async connect() {
-		this.client = await AMPQlib.connect(this.url);
-		this.channel = await this.client.createChannel();
+	async _connect() {
+		this.connection = await AMPQLibrary.connect(this.connectionString);
+		this.channel = await this.connection.createChannel();
+		return true;
 	}
-	async close(){
-		await this.client.close()
+
+	async close() {
+		await this.connection.close();
 	}
 }
 
-exports.AMPQ = AMPQ;
