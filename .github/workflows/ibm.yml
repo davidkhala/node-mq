@@ -1,0 +1,21 @@
+name: IBMEventStreams
+on:
+  push:
+  schedule:
+    - cron: 0 0 * * 1
+defaults:
+  run:
+    working-directory: kafka
+jobs:
+  IBM:
+    environment: IBMEventStreams
+    env:
+      api_key: ${{ secrets.API_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: latest
+      - run: npm i
+      - run: npm run IBM
