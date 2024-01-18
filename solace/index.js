@@ -24,11 +24,11 @@ export class SolaceConnect extends DB {
 		const factoryProps = new SolclientFactoryProperties();
 		factoryProps.profile = SolclientFactoryProfiles.version10_5;
 		SolclientFactory.init(factoryProps);
-		this.SolclientFactory = SolclientFactory;
+		this.factory = SolclientFactory;
 	}
 
 	async _connect() {
-		const {SolclientFactory, password} = this;
+		const {factory, password} = this;
 
 		// Establishes connection to Solace PubSub+ Event Broker
 		if (this.connection) {
@@ -41,7 +41,7 @@ export class SolaceConnect extends DB {
 
 		this.logger.debug(`Connecting to Solace PubSub+ Event Broker using url=${connectString}, vpn=${this.vpn}`);
 		// create session
-		this.connection = SolclientFactory.createSession({
+		this.connection = factory.createSession({
 			url: connectString,
 			vpnName: this.vpn,
 			userName: this.username,

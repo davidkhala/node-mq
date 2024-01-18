@@ -7,9 +7,9 @@ export class Pub extends SolaceConnect {
 
 	publish(topicName, messageText) {
 
-		const {SolclientFactory} = this;
-		const message = SolclientFactory.createMessage();
-		message.setDestination(SolclientFactory.createTopicDestination(topicName));
+		const {factory} = this;
+		const message = factory.createMessage();
+		message.setDestination(factory.createTopicDestination(topicName));
 		message.setBinaryAttachment(messageText);
 		message.setDeliveryMode(MessageDeliveryModeType.PERSISTENT);
 		this.logger.debug('Publishing message "' + messageText + '" to topic "' + topicName + '"...');
