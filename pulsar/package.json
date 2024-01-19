@@ -1,7 +1,7 @@
 {
   "name": "@davidkhala/pulsar",
   "version": "0.0.0",
-  "description": "",
+  "description": "pulsar nodejs lib",
   "scripts": {
     "test": "mocha test"
   },

@@ -1,5 +1,5 @@
 import Pulsar from '../index.js';
-
+import assert from 'assert'
 describe('pulsar', function () {
 	this.timeout(0);
 	const pulsar = new Pulsar({domain: 'localhost'});
@@ -11,8 +11,9 @@ describe('pulsar', function () {
 	});
 	if (!process.env.CI) {
 		it('sub', async () => {
-			const msg = await pulsar.subscribe(topic);
-			await pulsar.acknowledge(msg);
+			const [msg,receipt] = await pulsar.subscribe(topic);
+			assert.strictEqual(msg,message)
+			await pulsar.acknowledge(receipt);
 		});
 	}
 

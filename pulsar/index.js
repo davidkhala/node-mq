@@ -2,7 +2,7 @@ import PulsarClient from 'pulsar-client';
 import PubSub from '@davidkhala/pubsub';
 import {hostname} from '@davidkhala/light/devOps.js';
 
-const {Client} = PulsarClient;
+const {Client,MessageId} = PulsarClient;
 
 export default class Pulsar extends PubSub {
 	constructor({domain, port = 6650}, connectionString, logger) {
@@ -31,9 +31,9 @@ export default class Pulsar extends PubSub {
 	}
 
 
-	async acknowledge(message) {
-		// TODO cannot build Message from string
-		return this.consumer.acknowledge(message);
+	async acknowledge(messageId) {
+
+		return this.consumer.acknowledgeId(MessageId.deserialize(Buffer.from(messageId)));
 	}
 
 	async preSend(topic) {
@@ -61,7 +61,7 @@ export default class Pulsar extends PubSub {
 			subscription
 		});
 		this.consumer = consumer;
-		return await consumer.receive();
-
+		const msg = await consumer.receive();
+		return [msg.getData().toString(), msg.getMessageId().serialize()];
 	}
 }
