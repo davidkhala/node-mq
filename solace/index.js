@@ -68,10 +68,6 @@ export class SolaceConnect extends DB {
 	}
 
 
-	get dba() {
-		return undefined;
-	}
-
 	async disconnect() {
 		if (this.connection) {
 			this.connection.disconnect();
@@ -79,10 +75,6 @@ export class SolaceConnect extends DB {
 			delete this.connection;
 		}
 
-	}
-
-	async query(template, values, requestOptions) {
-		return Promise.resolve(undefined);
 	}
 
 	_throwConnectError(e) {

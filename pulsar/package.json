@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "pulsar-client": "latest",
-    "@davidkhala/db": "latest"
+    "@davidkhala/pubsub": "latest",
+    "@davidkhala/light": "latest"
   },
   "devDependencies": {
     "mocha": "latest"
