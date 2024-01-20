@@ -12,6 +12,7 @@
   "dependencies": {
     "pulsar-client": "latest",
     "@davidkhala/pubsub": "latest",
+    "@davidkhala/db": "^0.0.8",
     "@davidkhala/light": "latest"
   },
   "devDependencies": {

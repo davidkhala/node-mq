@@ -7,26 +7,26 @@ export default class MQ extends DB {
 
 	/**
 	 * @abstract
-	 * @return {Promise<Pub>|Pub}
+	 * @return {Pub}
 	 */
 	get producer() {
-
+		return new Pub()
 	}
 
 	/**
 	 * @abstract
-	 * @return {Promise<Sub>|Sub}
+	 * @return {Sub}
 	 */
 	get consumer() {
-
+		return new Sub()
 	}
 
 	/**
 	 * @abstract
-	 * @return {Promise<Admin>|Admin}
+	 * @return {Admin}
 	 */
 	get admin() {
-
+		return new Admin()
 	}
 
 }
@@ -72,6 +72,14 @@ export class Admin extends Connectable {
 	 * @abstract
 	 */
 	async listTopics() {
+
+	}
+
+	/**
+	 * Truncate data
+	 * @abstract
+	 */
+	async clear() {
 
 	}
 }
