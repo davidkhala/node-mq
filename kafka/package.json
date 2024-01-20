@@ -4,7 +4,8 @@
   "author": "david Liu  <david-khala@hotmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "kafkajs": "latest"
+    "kafkajs": "latest",
+    "@davidkhala/pubsub": "latest"
   },
   "scripts": {
     "test": "mocha test",

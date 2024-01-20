@@ -1,9 +1,10 @@
 {
   "name": "@davidkhala/pubsub",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "common module for message queue, broker, eventhub, pub/sub",
   "main": "index.js",
   "scripts": {
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -11,6 +12,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "mocha": "latest"
   },
   "dependencies": {
     "@davidkhala/db": "latest"

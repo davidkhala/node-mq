@@ -19,11 +19,11 @@ describe('Oracle Streaming', function () {
 
     it('connect', async () => {
         const client = new KafkaManager(kafka_brokers_sasl, {username, password})
-
-        await client.connect()
-        const topics = await client.listTopics()
+        const {admin} = client
+        await admin.connect()
+        const topics = await admin.listTopics()
 
         assert.ok(topics.includes('streaming'))
-        await client.disconnect()
+        await admin.disconnect()
     })
 })

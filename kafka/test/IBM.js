@@ -19,11 +19,11 @@ describe('IBM Event Stream', function () {
 
 	it('connect', async () => {
 		const client = new KafkaManager(kafka_brokers_sasl, {username, password: api_key});
-
-		await client.connect();
-		const result = await client.listTopics();
+		const {admin} = client
+		await admin.connect();
+		const result = await admin.listTopics();
 
 		assert.ok(result.includes(topic));
-		await client.disconnect();
+		await admin.disconnect();
 	});
 });
