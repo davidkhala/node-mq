@@ -2,8 +2,8 @@ import AMPQLibrary from 'amqplib';
 import MQ from '@davidkhala/pubsub';
 
 export class AMPQ extends MQ {
-	constructor({domain = 'localhost', port = 5672, password, username} = {}, logger) {
-		super({domain, username, password, port, dialect: 'amqp'}, undefined, logger);
+	constructor({domain = 'localhost', port = 5672, password, username, dialect = 'amqp', name = username}, connectionString, logger) {
+		super({domain, username, password, port, dialect, name}, connectionString, logger);
 	}
 
 	async send(topic, message) {
@@ -26,7 +26,7 @@ export class AMPQ extends MQ {
 		return true;
 	}
 
-	async close() {
+	async disconnect() {
 		await this.connection.close();
 	}
 }

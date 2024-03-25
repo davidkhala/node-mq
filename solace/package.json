@@ -13,7 +13,7 @@
     "mocha": "latest",
     "@davidkhala/docker": "latest",
     "@davidkhala/container": "latest",
-    "@davidkhala/light": "^0.2.4"
+    "@davidkhala/light": "latest"
   },
   "publishConfig": {
     "access": "public"

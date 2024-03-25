@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: davidkhala/setup-dockerode@main
       - run: |
-          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/activeMQ/docker-compose.yml > docker-compose.yml
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/activeMQ/compose.yaml > compose.yaml
           docker compose up -d
       - run: npm i
       - run: npm test
@@ -22,12 +22,10 @@ jobs:
         working-directory: rabbitmq
     steps:
       - uses: davidkhala/setup-dockerode@main
-      - run: |
-          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/rabbitmq/docker-compose.yml > docker-compose.yml
-          docker compose up -d
-      - run: sleep 15
       - run: npm i
       - run: npm test
+        env:
+          CLOUDAMQP_PASSWORD: ${{secrets.CLOUDAMQP_PASSWORD}}
   solace:
     runs-on: ubuntu-latest
     defaults:
@@ -36,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: |
-          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/solace/docker-compose.yml > docker-compose.yml
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/solace/compose.yaml > compose.yaml
           docker compose up -d
       - uses: actions/setup-node@main
         with:

@@ -1,4 +1,4 @@
-import {OCIContainerOptsBuilder} from '@davidkhala/container/oci.js';
+import {OCIContainerOptsBuilder} from '@davidkhala/container/options.js';
 import {Size} from '@davidkhala/light/constants.js';
 
 
@@ -17,6 +17,6 @@ export async function docker(manager, {websocket = 8008, portal = 8080, username
 	opts.env = env;
 	opts.opts.HostConfig.ShmSize = Size['2GB'];
 
-	await manager.containerStart(opts.opts, undefined, true);
+	await manager.containerStart(opts.opts, true);
 	return async () => manager.containerDelete(Image);
 }

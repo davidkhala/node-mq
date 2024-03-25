@@ -1,11 +1,16 @@
 import {AMPQ} from '../index.js';
 import assert from 'assert';
+import {docker} from './recipe.js';
+import {ContainerManager} from '@davidkhala/docker/docker.js';
 
 const topic = 'tasks';
-describe('rabbit MQ', () => {
-	// const userInstance = new AMPQ({username: 'user', password: 'bitnami'});
-	const bitnamiContainer = new AMPQ({username: 'user', password: 'bitnami'});
+describe('docker:bitnami', function () {
+	this.timeout(0);
+	const bitnamiContainer = new AMPQ({username: 'user', password: 'bitnami', name: ''});
+	const manager = new ContainerManager();
+	let stop;
 	before(async () => {
+		stop = await docker(manager);
 		await bitnamiContainer.connect();
 	});
 
@@ -19,6 +24,8 @@ describe('rabbit MQ', () => {
 		await bitnamiContainer.send(topic, message);
 	});
 	after(async () => {
-		await bitnamiContainer.close();
+		await bitnamiContainer.disconnect();
+		await stop();
 	});
 });
+
