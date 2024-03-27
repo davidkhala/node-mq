@@ -1,29 +1,31 @@
-import {WebsocketClient} from '../websocketClient.js';
-import {STOMPClient} from '../stomp.js';
+import {STOMP} from '../index.js';
+import assert from 'assert';
 
+const username = 'artemis';
+const password = 'artemis';
+const domain = 'localhost';
 describe('STOMP', function () {
 	this.timeout(0);
+	const client = new STOMP({domain, username, password});
 	it('connect', async () => {
-		const host = 'localhost';
-		const client = new STOMPClient(host);
 		await client.connect();
 
 		client.send('a', 'b');
 		await client.disconnect();
 	});
-
-});
-
-describe('websocket', function () {
-	this.timeout(0);
-	const host = 'localhost';
-	const conn = new WebsocketClient(host);
-
-	it('connect', async () => {
-		await conn.connect();
-
-		conn.send('a', 'b');
-		await conn.disconnect();
+	it('listen', async () => {
+		const topic = 'a';
+		await client.connect();
+		const message = 'b';
+		const received = await new Promise(resolve => {
+			const listener = client.subscribe(topic, (frame) => {
+				listener.unsubscribe();
+				resolve(frame.body);
+			});
+			client.send(topic, message);
+		});
+		assert.equal(received, message);
+		await client.disconnect();
 
 	});
 });

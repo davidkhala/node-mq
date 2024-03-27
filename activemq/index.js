@@ -1,5 +1,7 @@
 import {Client} from '@stomp/stompjs';
+import DB from '@davidkhala/db/index.js';
 import assert from 'assert';
+import {TCPWrapper} from '@stomp/tcp-wrapper';
 
 export const container = {
 	config: '/opt/activemq/conf',
@@ -11,46 +13,38 @@ export const ActivationState = {
 	INACTIVE: 2,
 };
 
-export class BaseClient {
-	constructor(host, {username, password} = {}, logger = console) {
-		assert.ok(typeof host === 'string', 'typeof host !== \'string\'');
+export class STOMP extends DB {
+	constructor({domain, username, password}, logger = console) {
+		super({domain, username, password}, undefined, logger);
 
-		this.client = new Client({
+		this.connection = new Client({
 			debug: logger.debug,
 			reconnectDelay: 5000,
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,
-			connectHeaders: {},
+			connectHeaders: {
+				login: username,
+				passcode: password
+			},
 		});
-		if (username) {
-			this.client.connectHeaders.login = username;
-		}
-		if (password) {
-			this.client.connectHeaders.passcode = password;
-		}
-		this.host = host;
-
+		this.connection.webSocketFactory = () => new TCPWrapper(domain, 61613);
 	}
 
 	async connect() {
 
-		if (this.client.state === ActivationState.DEACTIVATING) {
+		if (this.connection.state === ActivationState.DEACTIVATING) {
 			throw new Error('Still DEACTIVATING, can not activate now');
 		}
 
-		if (this.client.active) {
-			this.client.debug('Already ACTIVE, ignoring request to activate');
+		if (this.connection.active) {
+			this.connection.debug('Already ACTIVE, ignoring request to activate');
 			return;
 		}
 
-		this.client.onWebSocketClose = (err, ...others) => {
-			console.error('onWebSocketClose', err, ...others);
-		};
 
+		this.connection._changeState(ActivationState.ACTIVE);
 
-		this.client._changeState(ActivationState.ACTIVE);
-
-		await this.client._connect();
+		await this.connection._connect();
 		return new Promise((resolve, reject) => {
 			this.onConnect = (frame) => {
 				const {command} = frame;
@@ -61,20 +55,34 @@ export class BaseClient {
 	}
 
 	async disconnect() {
-		await this.client.deactivate();
+		await this.connection.deactivate();
 	}
 
 	set onConnect(listener) {
-		this.client.onConnect = listener;
+		this.connection.onConnect = listener;
 	}
 
 	send(topic, message) {
 		assert.ok(typeof topic === 'string', `Invalid destination type:${typeof topic}`);
 		assert.ok(typeof message === 'string', `Invalid body type:${typeof message}`);
 
-		this.client.publish({
+		this.connection.publish({
 			destination: topic,
 			body: message,
 		});
+	}
+
+	/**
+     *
+     * @param topic
+     * @param {function(message:IMessage)} listener
+     * @return {StompSubscription}
+     */
+	subscribe(topic, listener) {
+		return this.connection.subscribe(topic, listener);
+	}
+
+	unsubscribe(subscriptionID) {
+		this.connection.unsubscribe(subscriptionID);
 	}
 }

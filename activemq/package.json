@@ -7,7 +7,7 @@
   "dependencies": {
     "@stomp/stompjs": "beta",
     "@stomp/tcp-wrapper": "latest",
-    "ws": "latest"
+    "@davidkhala/db": "latest"
   },
   "devDependencies": {
     "@davidkhala/light": "latest",
