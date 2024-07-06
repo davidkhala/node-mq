@@ -18,4 +18,4 @@ jobs:
         with:
           node-version: latest
       - run: npm i
-      - run: npm run IBM
+      - run: npm run test:IBM

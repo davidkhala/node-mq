@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: latest
       - run: npm i
-      - run: npm run oracle
+      - run: npm run test:oracle
   local:
     runs-on: ubuntu-latest
     steps:
