@@ -16,5 +16,8 @@
   "devDependencies": {
     "mocha": "latest"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module"
 }

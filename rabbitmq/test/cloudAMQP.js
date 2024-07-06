@@ -1,9 +1,9 @@
 import CloudAMQP from '../cloudAMQP.js';
 
 const domain = 'fuji.lmq.cloudamqp.com';
-const username = 'tynlytfz';
+const username = 'qdpxyneo';
 const password = process.env.CLOUDAMQP_PASSWORD;
-describe('cloudAMQP', function () {
+describe('lavinMQ:Loyal Lemming:AP-NorthEast-1', function () {
 	this.timeout(0);
 
 

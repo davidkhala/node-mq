@@ -1,6 +1,6 @@
 import kafkajs from 'kafkajs';
 import PubSub, {Admin as AbstractAdmin} from '@davidkhala/pubsub';
-const {Admin, Kafka} = kafkajs
+const {Admin, Kafka} = kafkajs;
 
 export default class KafkaManager extends PubSub {
 
