@@ -1,6 +1,5 @@
-import KafkaManager from '../index.js';
-
 import assert from 'assert';
+import PlainSASL from '../plain.js';
 
 const kafka_brokers_sasl = [
 	'broker-0-ln9xw23yp788ngy9.kafka.svc02.us-south.eventstreams.cloud.ibm.com:9093',
@@ -18,7 +17,7 @@ describe('IBM Event Stream', function () {
 	assert.ok(api_key, 'Missing api_key');
 
 	it('connect', async () => {
-		const client = new KafkaManager(kafka_brokers_sasl, {username, password: api_key});
+		const client = new PlainSASL(kafka_brokers_sasl, {username, password: api_key});
 		const {admin} = client;
 		await admin.connect();
 		const result = await admin.listTopics();

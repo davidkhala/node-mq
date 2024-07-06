@@ -1,9 +1,8 @@
-import KafkaManager from '../index.js';
 import assert from 'assert';
+import PlainSASL from '../plain.js';
 
 describe('Oracle Streaming', function () {
 	this.timeout(0);
-
 
 
 	const kafka_brokers_sasl = ['cell-1.streaming.ap-singapore-1.oci.oraclecloud.com:9092'];
@@ -18,7 +17,7 @@ describe('Oracle Streaming', function () {
 	}
 
 	it('connect', async () => {
-		const client = new KafkaManager(kafka_brokers_sasl, {username, password});
+		const client = new PlainSASL(kafka_brokers_sasl, {username, password});
 		const {admin} = client;
 		await admin.connect();
 		const topics = await admin.listTopics();

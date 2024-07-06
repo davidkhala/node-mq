@@ -7,27 +7,24 @@ export default class KafkaManager extends PubSub {
 	/**
 	 *
 	 * @param {string[]} brokers
-	 * @param {string} [username]
-	 * @param {string} [password]
+	 * @param [ssl] default to true
 	 * @param {string} [clientId] default to "kafkajs"
-	 * @param logger
+	 * @param sasl sasl config
+	 * @param [logger]
 	 */
-	constructor(brokers, {username, password, clientId} = {}, logger) {
-		super({name: clientId, username, password}, undefined, logger);
+	constructor(brokers, {ssl=true, clientId='kafkajs', sasl} = {}, logger) {
+		super({
+			name: clientId,
+			username:sasl?sasl.username:undefined,
+			password:sasl?sasl.password:undefined,
+		}, undefined, logger);
 		const config = {
 			clientId,
 			brokers,
+			ssl,
+			sasl
 		};
-		if (username) {
-			Object.assign(config, {
-				ssl: true,
-				sasl: {
-					mechanism: 'plain', // scram-sha-256 or scram-sha-512
-					username,
-					password
-				},
-			});
-		}
+
 		this.kafkaManager = new Kafka(config);
 	}
 
