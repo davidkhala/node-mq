@@ -11,5 +11,5 @@
         - Offers access to **1 partition** in a multi-tenant Event Streams cluster.
 - OCI Streaming Service
 - Transactional Event Queues in Oracle Database
-- Amazon MKS
+- Amazon Managed Streaming for Apache Kafka (MSK)
 - Confluent Cloud
