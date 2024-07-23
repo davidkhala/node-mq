@@ -10,6 +10,5 @@
     - Lite plan (Free) is available in Region Dallas (us-south)
         - Offers access to **1 partition** in a multi-tenant Event Streams cluster.
 - OCI Streaming Service
-- Transactional Event Queues in Oracle Database
 - Amazon Managed Streaming for Apache Kafka (MSK)
 - Confluent Cloud
