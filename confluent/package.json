@@ -1,0 +1,18 @@
+{
+  "name": "@davidkhala/confluent",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "keywords": [
+    "kafka"
+  ],
+  "author": "david-khala@hotmail.com",
+  "license": "Apache-2.0",
+  "description": "",
+  "dependencies": {
+    "@confluentinc/kafka-javascript": "latest"
+  },
+  "type": "module"
+}
