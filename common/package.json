@@ -1,6 +1,6 @@
 {
   "name": "@davidkhala/pubsub",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "common module for message queue, broker, eventhub, pub/sub",
   "main": "index.js",
   "scripts": {

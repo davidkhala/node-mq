@@ -1,21 +1,94 @@
-const {
-    Kafka,
-    ErrorCodes, CompressionTypes, 
-  } = require('@confluentinc/kafka-javascript').KafkaJS;
+import {KafkaJS} from '@confluentinc/kafka-javascript'
+import MQ, {Pub as AbstractPub, Sub as AbstractSub} from '@davidkhala/pubsub'
+import crypto from 'crypto'
+import * as assert from "node:assert";
+
+const {Kafka} = KafkaJS
 
 
-  const producer = new Kafka().producer({
-    'bootstrap.servers': '<fill>',
-});
+export default class Confluent extends MQ {
+    constructor({endpoint, id, apiKey, apiSecret}) {
+        super()
+        this.connection = new Kafka({
+            'bootstrap.servers': endpoint,
+            'security.protocol': 'SASL_SSL',
+            'sasl.mechanisms': 'PLAIN',
+            "client.id": id || `ccloud-nodejs-client-${crypto.randomUUID()}`,
+            'session.timeout.ms': 45000,  // Best practice for higher availability in librdkafka clients prior to 1.7
+            'sasl.username': apiKey,
+            'sasl.password': apiSecret,
+        })
+    }
 
-await producer.connect();
+    getProducer(options) {
+        return new Pub(this.connection, options)
+    }
 
-const deliveryReports = await producer.send({
-    topic: 'test-topic',
-    messages: [
-      { value: 'v1', key: 'x' },
-    ]
-});
 
-console.log({deliveryReports});
-await producer.disconnect();
+    get dba() {
+        return undefined;
+    }
+
+    getConsumer(options) {
+        return new Sub(this.connection, options);
+    }
+}
+
+export class Pub extends AbstractPub {
+    constructor(kafka, options) {
+        super(kafka, options);
+        this.pub = kafka.producer(options);
+    }
+
+    async connect() {
+        await this.pub.connect();
+    }
+
+    async send(...messages) {
+        return await this.pub.send({
+            topic:this.topic, messages
+        })
+    }
+    async disconnect() {
+        await this.pub.disconnect();
+    }
+}
+
+export class Sub extends AbstractSub {
+    constructor(kafka, options) {
+
+        options["auto.offset.reset"] = "earliest"
+        const {group, topic} = options
+        if (!group) {
+            options.group = 'nodejs-group'
+        }
+        assert.ok(topic)
+        super(kafka,options);
+        delete options.topic
+        delete options.group
+        this.sub = kafka.consumer(Object.assign(options, {
+            "group.id": this.group
+        }))
+    }
+
+    async connect() {
+        await this.sub.connect();
+    }
+
+    async disconnect() {
+        await this.sub.commitOffsets();
+        await this.sub.disconnect();
+    }
+
+    async acknowledge(message) {
+        return Promise.resolve(undefined);
+    }
+
+    async subscribe(onMessage, ...topic) {
+        await this.sub.subscribe({topics: [this.topic, ...topic]});
+        await this.sub.run({
+            eachMessage: onMessage
+        })
+    }
+}
+

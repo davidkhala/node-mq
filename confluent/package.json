@@ -12,7 +12,11 @@
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
-    "@confluentinc/kafka-javascript": "latest"
+    "@confluentinc/kafka-javascript": "latest",
+    "@davidkhala/pubsub": "^0.0.6"
+  },
+  "devDependencies": {
+    "mocha": "latest"
   },
   "type": "module"
 }

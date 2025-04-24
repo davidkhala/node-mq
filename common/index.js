@@ -1,85 +1,96 @@
-import DB, {Connectable} from '@davidkhala/db';
+import {Connectable} from '@davidkhala/db';
 
-export default class MQ extends DB {
-	constructor({domain, port, name, username, password, dialect, driver}, connectionString, logger) {
-		super({domain, port, name, username, password, dialect, driver}, connectionString, logger);
-	}
+export default class MQ {
 
-	/**
-	 * @abstract
-	 * @return {Pub}
-	 */
-	get producer() {
-		return new Pub()
-	}
+    /**
+     * @abstract
+     * @return {Pub}
+     */
+    getProducer(options) {
+        return new Pub(this, options)
+    }
 
-	/**
-	 * @abstract
-	 * @return {Sub}
-	 */
-	get consumer() {
-		return new Sub()
-	}
+    /**
+     * @abstract
+     * @return {Sub}
+     */
+    getConsumer(options) {
+        return new Sub(this, options)
+    }
 
-	/**
-	 * @abstract
-	 * @return {Admin}
-	 */
-	get admin() {
-		return new Admin()
-	}
-
+    /**
+     * @abstract
+     * @return {Admin}
+     */
+    get dba() {
+    }
 }
 
+/**
+ * @abstract
+ */
 export class Pub extends Connectable {
-	/**
-	 *
-	 * @abstract
-	 * @param {string} topic
-	 * @param {string} message
-	 * @param [options]
-	 */
-	async send(topic, message, ...options) {
+    constructor(mq, options) {
+        super();
+        this.topic = options.topic;
+    }
 
-	}
+    /**
+     *
+     * @abstract
+     * @param {string} message
+     */
+    async send(...message) {
+
+    }
 
 }
 
+/**
+ * @abstract
+ */
 export class Sub extends Connectable {
-	/**
-	 *
-	 * @abstract
-	 * @param {string} topic
-	 * @param [options]
-	 */
-	async subscribe(topic, ...options) {
+    constructor(mq, options) {
+        super();
+        this.topic = options.topic;
+        this.group = options.group; // e.g. subscription in gcp pubsub, group.id for kafka
+    }
 
-	}
+    /**
+     *
+     * @abstract
+     */
+    async subscribe() {
 
-	/**
-	 *
-	 * @abstract
-	 * @param {string} message
-	 */
-	async acknowledge(message) {
+    }
 
-	}
+    /**
+     *
+     * @abstract
+     * @param {string} message
+     */
+    async acknowledge(message) {
+
+    }
 
 }
 
+/**
+ * @abstract
+ */
 export class Admin extends Connectable {
-	/**
-	 * @abstract
-	 */
-	async listTopics() {
+    /**
+     * @abstract
+     */
+    async listTopics() {
 
-	}
+    }
 
-	/**
-	 * Truncate data
-	 * @abstract
-	 */
-	async clear() {
+    /**
+     * Truncate data
+     * @abstract
+     */
+    async clear() {
 
-	}
+    }
 }
