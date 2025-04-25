@@ -21,9 +21,9 @@ describe('', function () {
         const sub = confluent.getConsumer({topic})
         await sub.connect()
         await sub.subscribe(async ({topic, partition, message}) => {
-            console.log(
-                `Consumed message from topic ${topic}, partition ${partition}: key = ${message.key.toString()}, value = ${message.value.toString()}`
-            );
+            console.log({
+                topic, partition, key: message.key.toString(), value: JSON.parse(message.value)
+            });
         })
         process.on("SIGTERM", ()=>{sub.disconnect()});
         process.on("SIGINT", ()=>{sub.disconnect()});
