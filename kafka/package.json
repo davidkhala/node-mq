@@ -14,7 +14,8 @@
     "test:local": "mocha test/localhost.js"
   },
   "devDependencies": {
-    "mocha": "latest"
+    "mocha": "latest",
+    "@testcontainers/kafka": "latest"
   },
   "publishConfig": {
     "access": "public"
