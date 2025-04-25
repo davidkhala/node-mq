@@ -20,13 +20,13 @@ jobs:
   local:
     runs-on: ubuntu-latest
     steps:
-    - uses: davidkhala/setup-dockerode@main
-    - run: |
-        curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/kafka/bitnami/compose.yaml > compose.yaml
-        docker compose up -d
-    - run: sleep 7
-    - run: npm i
-    - run: npm run test:local
+      - uses: davidkhala/setup-dockerode@main
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/kafka/bitnami/compose.yaml > compose.yaml
+          docker compose up -d
+      - run: sleep 7
+      - run: npm i
+      - run: npm run test:local
   pulsar:
     runs-on: ubuntu-latest
     defaults:
@@ -40,3 +40,18 @@ jobs:
       - run: sleep 7
       - run: npm i
       - run: npm test
+
+  confluent:
+    runs-on: ubuntu-latest
+    environment: confluent
+    defaults:
+      run:
+        working-directory: confluent
+    steps:
+      - uses: actions/checkout@main
+      - run: npm i
+      - run: npm test
+        env:
+          API_SECRET: ${{secrets.API_SECRET}}
+          API_KEY: ${{vars.API_KEY}}
+          ENDPOINT: ${{vars.ENDPOINT}}

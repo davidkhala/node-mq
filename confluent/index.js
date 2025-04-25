@@ -14,21 +14,26 @@ export default class Confluent extends MQ {
             'security.protocol': 'SASL_SSL',
             'sasl.mechanisms': 'PLAIN',
             "client.id": id || `ccloud-nodejs-client-${crypto.randomUUID()}`,
-            'session.timeout.ms': 45000,  // Best practice for higher availability in librdkafka clients prior to 1.7
             'sasl.username': apiKey,
             'sasl.password': apiSecret,
         })
     }
 
+    /**
+     *
+     * @param options
+     * @returns {Pub}
+     */
     getProducer(options) {
         return new Pub(this.connection, options)
     }
 
 
-    get dba() {
-        return undefined;
-    }
-
+    /**
+     *
+     * @param options
+     * @returns {Sub}
+     */
     getConsumer(options) {
         return new Sub(this.connection, options);
     }
@@ -46,24 +51,34 @@ export class Pub extends AbstractPub {
 
     async send(...messages) {
         return await this.pub.send({
-            topic:this.topic, messages
+            topic: this.topic, messages
         })
     }
+
     async disconnect() {
         await this.pub.disconnect();
     }
 }
 
 export class Sub extends AbstractSub {
-    constructor(kafka, options) {
 
+    static _setOption(options, alias,key, defaultValue){
+        if(options[alias]){
+            options[key] = options[alias];
+            delete options[alias];
+        }else {
+            options[key] = defaultValue;
+        }
+    }
+    constructor(kafka, options) {
+        Sub._setOption(options, 'timeout', 'session.timeout.ms',45000 ) // Best practice for higher availability in librdkafka clients prior to 1.7
         options["auto.offset.reset"] = "earliest"
         const {group, topic} = options
         if (!group) {
             options.group = 'nodejs-group'
         }
         assert.ok(topic)
-        super(kafka,options);
+        super(kafka, {topic,group});
         delete options.topic
         delete options.group
         this.sub = kafka.consumer(Object.assign(options, {
