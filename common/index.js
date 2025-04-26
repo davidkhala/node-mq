@@ -4,7 +4,6 @@ export default class MQ {
 
     /**
      * @abstract
-     * @return {Pub}
      */
     getProducer(options) {
         return new Pub(this, options)
@@ -12,7 +11,6 @@ export default class MQ {
 
     /**
      * @abstract
-     * @return {Sub}
      */
     getConsumer(options) {
         return new Sub(this, options)
@@ -20,9 +18,9 @@ export default class MQ {
 
     /**
      * @abstract
-     * @return {Admin}
      */
-    get dba() {
+    getAdmin(options) {
+        return new Admin(this, options)
     }
 }
 
@@ -38,7 +36,6 @@ export class Pub extends Connectable {
     /**
      *
      * @abstract
-     * @param {string} message
      */
     async send(...message) {
 
@@ -67,7 +64,6 @@ export class Sub extends Connectable {
     /**
      *
      * @abstract
-     * @param {string} message
      */
     async acknowledge(message) {
 
@@ -87,7 +83,7 @@ export class Admin extends Connectable {
     }
 
     /**
-     * Truncate data
+     * Truncate topics
      * @abstract
      */
     async clear() {

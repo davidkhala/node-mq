@@ -96,9 +96,15 @@ export class Sub extends AbstractSub {
     }
 
     async acknowledge(message) {
+        // TODO WIP
         return Promise.resolve(undefined);
     }
 
+    /**
+     *
+     * @param {function({topic, partition, message})} onMessage
+     * @param topic
+     */
     async subscribe(onMessage, ...topic) {
         await this.sub.subscribe({topics: [this.topic, ...topic]});
         await this.sub.run({

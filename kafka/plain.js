@@ -1,6 +1,6 @@
-import KafkaManager from './index.js';
+import Kafka from './index.js';
 
-export default class PlainSASL extends KafkaManager {
+export default class PlainSASL extends Kafka {
 	/**
 	 *
 	 * @param brokers

@@ -1,7 +1,7 @@
-import KafkaManager from './index.js';
+import Kafka from './index.js';
 
-export default class Insecure extends KafkaManager {
-	constructor(brokers) {
+export default class Insecure extends Kafka {
+	constructor(...brokers) {
 		super(brokers, {ssl: false});
 	}
 }

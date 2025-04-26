@@ -21,10 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: davidkhala/setup-dockerode@main
-      - run: |
-          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/kafka/bitnami/compose.yaml > compose.yaml
-          docker compose up -d
-      - run: sleep 7
       - run: npm i
       - run: npm run test:local
   pulsar:

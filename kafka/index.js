@@ -1,9 +1,8 @@
-import kafkajs from 'kafkajs';
-import PubSub, {Admin as AbstractAdmin} from '@davidkhala/pubsub';
+import {Kafka as NativeKafka} from 'kafkajs';
+import PubSub, {Admin as AbstractAdmin, Sub as AbstractSub, Pub as AbstractPub} from '@davidkhala/pubsub';
 
-const {Admin, Kafka} = kafkajs;
 
-export default class KafkaManager extends PubSub {
+export default class Kafka extends PubSub {
 
     /**
      *
@@ -22,7 +21,7 @@ export default class KafkaManager extends PubSub {
             this.password = password
         }
 
-        this.kafkaManager = new Kafka({
+        this.kafka = new NativeKafka({
             clientId,
             brokers,
             ssl,
@@ -30,32 +29,83 @@ export default class KafkaManager extends PubSub {
         });
     }
 
-    get dba() {
-        if (!this._admin) {
-            this._admin = new KafkaAdmin(this.kafkaManager.admin());
-        }
-        return this._admin;
+    getAdmin(options) {
+        return new Admin(this.kafka, options);
     }
 
 
-    get producer() {
-        return this.kafkaManager.producer();
+    getProducer(topic) {
+        return new Pub(this.kafka, {topic});
     }
 
-    get consumer() {
-        return this.kafkaManager.consumer();
+    getConsumer(topic, groupId) {
+        return new Sub(this.kafka, {groupId, topic});
     }
 
 }
 
-export class KafkaAdmin extends AbstractAdmin {
+export class Sub extends AbstractSub {
+    constructor(kafka, options) {
+        const {groupId, topic} = options
+        super(kafka, {group: groupId, topic});
+        this.sub = kafka.consumer(options)
+        this.fromBeginning = true
+    }
+
+    async connect(...topics) {
+        await this.sub.connect()
+    }
+
+    async disconnect() {
+        await this.sub.disconnect()
+    }
+
+
+    async subscribe(...topics) {
+        const {fromBeginning} = this
+        await this.sub.subscribe({
+            topics: [this.topic, ...topics],
+            fromBeginning
+        })
+    }
+
     /**
-     *
-     * @param {Admin} admin
+     * @param {function({topic, partition, message})} onMessage callback
      */
-    constructor(admin) {
+    async run(onMessage){
+        await this.sub.run({
+            eachMessage: onMessage
+        })
+    }
+}
+
+export class Pub extends AbstractPub {
+    constructor(kafka, options) {
+        const {topic} = options
+        super(kafka, {topic});
+        this.pub = kafka.producer(options);
+    }
+
+    async send(...message) {
+        return await this.pub.send({
+            topic: this.topic,
+            messages: message
+        })
+    }
+
+    async connect() {
+        await this.pub.connect()
+    }
+
+    async disconnect() {
+        await this.pub.disconnect()
+    }
+}
+
+export class Admin extends AbstractAdmin {
+    constructor(kafka, options) {
         super();
-        this.admin = admin;
+        this.admin = kafka.admin(options);
     }
 
     async listTopics() {

@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "mocha": "latest",
-    "@testcontainers/kafka": "latest"
+    "@testcontainers/kafka": "latest",
+    "@davidkhala/db": "latest"
   },
   "publishConfig": {
     "access": "public"
