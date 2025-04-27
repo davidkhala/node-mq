@@ -1,28 +1,44 @@
 import Pulsar from '../index.js';
-import assert from 'assert';
+import {ContainerManager} from "@davidkhala/docker/docker.js";
+import {docker} from "../test-utils/recipe.js";
+import * as assert from "node:assert";
 
 describe('', function () {
     this.timeout(0);
     const pulsar = new Pulsar({domain: 'localhost'});
     const topic = 'topic';
     const message = 'message';
-    it('pubsub', async () => {
+    let stop
+    before(async () => {
+        const manager = new ContainerManager();
+        stop = await docker(manager, {});
+    })
+    const test_pub = async () => {
         const producer = pulsar.getProducer(topic);
         await producer.connect()
-        const msgId = await producer.send(message);
-        console.info({msgId}, msgId.serialize().toString());
-
-
+        await producer.send(message);
+        await producer.disconnect();
+    }
+    it('pub', test_pub);
+    it('sub', async () => {
         const consumer = pulsar.getConsumer(topic);
         await consumer.connect()
-        // TODO WIP
-        // const {data, id} = await consumer.subscribe();
-        // assert.strictEqual(data, message);
-        // await consumer.acknowledge(id);
+
+        await Promise.all([
+            test_pub(),
+            (async () => {
+                const {data, id} = await consumer.get_next();
+                assert.strictEqual(data, message);
+                console.info('id', id.toString())
+                await consumer.acknowledge(id);
+            })(),
+        ])
 
         await consumer.disconnect();
-        await producer.disconnect();
-    });
+    })
 
+    after(async () => {
+        await stop()
+    })
 
 });

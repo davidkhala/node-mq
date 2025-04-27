@@ -30,10 +30,6 @@ jobs:
         working-directory: pulsar
     steps:
       - uses: davidkhala/setup-dockerode@main
-      - run: |
-          curl -sSL https://raw.githubusercontent.com/davidkhala/mq/main/pulsar/compose.yaml > compose.yaml
-          docker compose up -d
-      - run: sleep 7
       - run: npm i
       - run: npm test
 

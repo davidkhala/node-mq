@@ -16,7 +16,9 @@
     "@davidkhala/light": "latest"
   },
   "devDependencies": {
-    "mocha": "latest"
+    "mocha": "latest",
+    "@davidkhala/docker": "latest",
+    "@davidkhala/container": "latest"
   },
   "publishConfig": {
     "access": "public"

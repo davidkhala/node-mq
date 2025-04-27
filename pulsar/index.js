@@ -101,16 +101,28 @@ export class Consumer extends Sub {
 
     }
 
-    async subscribe() {
+    async get_next() {
         const msg = await this.sub.receive();
+        /**
+         * @type MessageId
+         */
+        const id = msg.getMessageId()
         return {
             data: msg.getData().toString(),
-            id: msg.getMessageId().serialize()
+            id,
+            id_bytes: id.serialize()
         };
     }
 
-    async acknowledge(message) {
-        return await this.sub.acknowledgeId(MessageId.deserialize(Buffer.from(message)));
+    /**
+     *
+     * @param {MessageId|Buffer} message_id
+     */
+    async acknowledge(message_id) {
+        if (Buffer.isBuffer(message_id)) {
+            message_id = MessageId.deserialize(Buffer.from(message_id))
+        }
+        return await this.sub.acknowledgeId(message_id);
     }
 
     async disconnect() {
