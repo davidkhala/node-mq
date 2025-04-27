@@ -18,7 +18,7 @@ describe('Oracle Streaming', function () {
 
 	it('connect', async () => {
 		const client = new PlainSASL(kafka_brokers_sasl, {username, password});
-		const {admin} = client;
+		const admin = client.getAdmin()
 		await admin.connect();
 		const topics = await admin.listTopics();
 

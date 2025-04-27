@@ -18,7 +18,7 @@ describe('IBM Event Stream', function () {
 
 	it('connect', async () => {
 		const client = new PlainSASL(kafka_brokers_sasl, {username, password: api_key});
-		const {admin} = client;
+		const admin = client.getAdmin()
 		await admin.connect();
 		const result = await admin.listTopics();
 
