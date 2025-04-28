@@ -62,8 +62,16 @@ export class Sub extends Connectable {
     }
 
     /**
-     *
      * @abstract
+     * seek to an offset, timestamp or messageId
+     */
+    reset(offset) {
+
+    }
+
+    /**
+     *
+     * Not required for reader
      */
     async acknowledge(message) {
 

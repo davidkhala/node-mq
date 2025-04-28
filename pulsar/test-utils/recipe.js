@@ -1,7 +1,7 @@
 import {OCIContainerOptsBuilder} from '@davidkhala/container/options.js'
 import {healthcheck, run} from "../const.js";
 
-export async function docker(manager, {pulsaPort = 6650, httpPort = 8080}) {
+export async function docker(manager, {pulsaPort = 6650, httpPort = 8080, persist}) {
     const Image = 'apachepulsar/pulsar';
     const name = 'pulsar';
 
@@ -10,10 +10,12 @@ export async function docker(manager, {pulsaPort = 6650, httpPort = 8080}) {
     opts.setPortBind(`${pulsaPort}:6650`);
     opts.setPortBind(`${httpPort}:8080`);
     opts.setHealthCheck({
-        useShell: false, commands: healthcheck.Standalone
+        useShell: false, commands: healthcheck.StandaloneTopic
     });
-    opts.setVolume('pulsarconf', '/pulsar/conf')
-    opts.setVolume('pulsardata', '/pulsar/data')
+    if (persist) {
+        opts.setVolume('pulsarconf', '/pulsar/conf')
+        opts.setVolume('pulsardata', '/pulsar/data')
+    }
 
     await manager.containerStart(opts.opts, true);
     await manager.containerWaitForHealthy(name);

@@ -1,8 +1,10 @@
+// import {Client} from 'pulsar-client';
 import PulsarClient from 'pulsar-client';
-import PubSub, {Pub, Sub} from '@davidkhala/pubsub';
+import PubSub from '@davidkhala/pubsub';
 import {hostname} from '@davidkhala/light/devOps.js';
-
-const {Client, MessageId} = PulsarClient;
+import {Producer} from "./pub.js";
+import {Consumer, Reader} from './sub.js'
+const {Client} = PulsarClient
 
 export default class Pulsar extends PubSub {
     constructor({domain, port = 6650}) {
@@ -50,7 +52,7 @@ export default class Pulsar extends PubSub {
 
     /**
      *
-     * @param topic
+     * @param {string} topic
      * @param [group]
      * @returns {Consumer}
      */
@@ -61,71 +63,8 @@ export default class Pulsar extends PubSub {
         return new Consumer(this.connection, {topic, group})
 
     }
-}
 
-export class Producer extends Pub {
-    constructor(pulsar, options) {
-        const {topic} = options
-        super(pulsar, {topic});
-        this.pulsar = pulsar
-    }
-
-    async connect() {
-        const {topic, pulsar} = this
-        this.pub = await pulsar.createProducer({topic})
-    }
-
-    async send(message) {
-        return await this.pub.send({data: Buffer.from(message)});
-    }
-
-    async disconnect() {
-        await this.pub.close();
-    }
-}
-
-export class Consumer extends Sub {
-
-    constructor(pulsar, options) {
-        const {topic, group} = options
-        super(pulsar, {topic, group});
-        this.pulsar = pulsar;
-    }
-
-    async connect() {
-        const {topic, pulsar, group} = this
-        this.sub = await pulsar.subscribe({
-            topic,
-            subscription: group
-        });
-
-    }
-
-    async get_next() {
-        const msg = await this.sub.receive();
-        /**
-         * @type MessageId
-         */
-        const id = msg.getMessageId()
-        return {
-            data: msg.getData().toString(),
-            id,
-            id_bytes: id.serialize()
-        };
-    }
-
-    /**
-     *
-     * @param {MessageId|Buffer} message_id
-     */
-    async acknowledge(message_id) {
-        if (Buffer.isBuffer(message_id)) {
-            message_id = MessageId.deserialize(Buffer.from(message_id))
-        }
-        return await this.sub.acknowledgeId(message_id);
-    }
-
-    async disconnect() {
-        return await this.sub.close();
+    getReader(){
+        return new Reader(this.connection, {topic})
     }
 }

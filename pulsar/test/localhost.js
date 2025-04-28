@@ -19,22 +19,45 @@ describe('', function () {
         await producer.send(message);
         await producer.disconnect();
     }
-    it('pub', test_pub);
-    it('sub', async () => {
+    it('fifo', async () => {
+        const producer = pulsar.getProducer(topic);
+        await producer.connect()
+        for (let i = 1; i <= 10; i++) {
+            await producer.send(i.toString());
+        }
+        await producer.flush()
+        await producer.disconnect();
+
+        //
         const consumer = pulsar.getConsumer(topic);
         await consumer.connect()
+        await consumer.reset()
 
+        for (let i = 1; i <= 10; i++) {
+            const {data, id} = await consumer.subscribe();
+            assert.equal(data, i.toString())
+            await consumer.acknowledge(id)
+        }
+
+        await consumer.disconnect();
+    })
+    it('sub', async () => {
+
+        const consumer = pulsar.getConsumer(topic);
         await Promise.all([
             test_pub(),
             (async () => {
-                const {data, id} = await consumer.get_next();
+
+                await consumer.connect()
+                const {data, id} = await consumer.subscribe();
                 assert.strictEqual(data, message);
                 console.info('id', id.toString())
                 await consumer.acknowledge(id);
+                await consumer.disconnect();
             })(),
         ])
 
-        await consumer.disconnect();
+
     })
 
     after(async () => {
