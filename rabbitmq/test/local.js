@@ -1,4 +1,4 @@
-import {AMPQ} from '../index.js';
+import {AMQP} from '../index.js';
 import assert from 'assert';
 import {docker} from './recipe.js';
 import {ContainerManager} from '@davidkhala/docker/docker.js';
@@ -6,7 +6,7 @@ import {ContainerManager} from '@davidkhala/docker/docker.js';
 const topic = 'tasks';
 describe('docker:bitnami', function () {
 	this.timeout(0);
-	const bitnamiContainer = new AMPQ({username: 'user', password: 'bitnami', name: ''});
+	const bitnamiContainer = new AMQP({username: 'user', password: 'bitnami', name: ''});
 	const manager = new ContainerManager();
 	let stop;
 	before(async () => {

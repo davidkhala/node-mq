@@ -17,6 +17,7 @@ jobs:
       - run: npm test
   rabbitmq:
     runs-on: ubuntu-latest
+    environment: cloudAMQP
     defaults:
       run:
         working-directory: rabbitmq
@@ -25,7 +26,9 @@ jobs:
       - run: npm i
       - run: npm test
         env:
-          CLOUDAMQP_PASSWORD: ${{secrets.CLOUDAMQP_PASSWORD}}
+          PASSWORD: ${{secrets.PASSWORD}}
+          DOMAIN: ${{vars.DOMAIN}}
+          USER: ${{vars.USER}}
   solace:
     runs-on: ubuntu-latest
     defaults:

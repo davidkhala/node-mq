@@ -1,7 +1,7 @@
 import AMPQLibrary from 'amqplib';
-import MQ from '@davidkhala/pubsub';
+import DB from '@davidkhala/db';
 
-export class AMPQ extends MQ {
+export class AMQP extends DB {
 	constructor({domain = 'localhost', port = 5672, password, username, dialect = 'amqp', name = username}, connectionString, logger) {
 		super({domain, username, password, port, dialect, name}, connectionString, logger);
 	}
@@ -20,10 +20,9 @@ export class AMPQ extends MQ {
 		this.channel.ack(message);
 	}
 
-	async _connect() {
+	async connect() {
 		this.connection = await AMPQLibrary.connect(this.connectionString);
 		this.channel = await this.connection.createChannel();
-		return true;
 	}
 
 	async disconnect() {
