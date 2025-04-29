@@ -25,6 +25,12 @@ export default class Confluent extends MQ {
      * @returns {Pub}
      */
     getProducer(options) {
+        /**
+         * Delay in milliseconds to wait for messages in the producer queue to accumulate before constructing message batches to transmit to brokers.
+         * A higher value means less overhead, improved compression of messages, at the expense of increased message delivery latency.
+         * @type number
+         */
+        options["linger.ms"] = options["linger.ms"] || 5
         return new Pub(this.connection, options)
     }
 
@@ -55,6 +61,22 @@ export class Pub extends AbstractPub {
         })
     }
 
+    send_async(...messages) {
+        this.pub.send({
+            topic: this.topic,
+            messages
+        });
+    }
+
+    /**
+     * call flush to send all messages in the internal buffer without waiting for the linger.ms to expire.
+     * @param timeout
+     * @returns {Promise<void>}
+     */
+    async flush(timeout) {
+        await this.pub.flush({timeout});
+    }
+
     async disconnect() {
         await this.pub.disconnect();
     }
@@ -62,23 +84,24 @@ export class Pub extends AbstractPub {
 
 export class Sub extends AbstractSub {
 
-    static _setOption(options, alias,key, defaultValue){
-        if(options[alias]){
+    static _setOption(options, alias, key, defaultValue) {
+        if (options[alias]) {
             options[key] = options[alias];
             delete options[alias];
-        }else {
+        } else {
             options[key] = defaultValue;
         }
     }
+
     constructor(kafka, options) {
-        Sub._setOption(options, 'timeout', 'session.timeout.ms',45000 ) // Best practice for higher availability in librdkafka clients prior to 1.7
+        Sub._setOption(options, 'timeout', 'session.timeout.ms', 45000) // Best practice for higher availability in librdkafka clients prior to 1.7
         options["auto.offset.reset"] = "earliest"
         const {group, topic} = options
         if (!group) {
             options.group = 'nodejs-group'
         }
         assert.ok(topic)
-        super(kafka, {topic,group});
+        super(kafka, {topic, group});
         delete options.topic
         delete options.group
         this.sub = kafka.consumer(Object.assign(options, {
@@ -95,9 +118,13 @@ export class Sub extends AbstractSub {
         await this.sub.disconnect();
     }
 
-    async acknowledge(message) {
-        // TODO WIP
-        return Promise.resolve(undefined);
+    /**
+     * Kafka consumers automatically acknowledge message(equivalent to commit offsets) processing upon broker acquisition
+     * By default, offsets are committed automatically by the library.
+     * To commit offsets manually, setting `enable.auto.commit` to false
+     */
+    async acknowledge() {
+        await this.sub.commitOffsets()
     }
 
     /**
