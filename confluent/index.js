@@ -1,9 +1,10 @@
 import {KafkaJS} from '@confluentinc/kafka-javascript'
-import MQ, {Pub as AbstractPub, Sub as AbstractSub} from '@davidkhala/pubsub'
+import MQ, {Admin as AbstractAdmin} from '@davidkhala/pubsub'
 import crypto from 'crypto'
-import * as assert from "node:assert";
+import {Sub} from "./sub.js";
+import {Pub} from "./pub.js";
 
-const {Kafka} = KafkaJS
+const {Kafka, Admin: NativeAdmin} = KafkaJS
 
 
 export default class Confluent extends MQ {
@@ -43,100 +44,51 @@ export default class Confluent extends MQ {
     getConsumer(options) {
         return new Sub(this.connection, options);
     }
-}
 
-export class Pub extends AbstractPub {
-    constructor(kafka, options) {
-        super(kafka, options);
-        this.pub = kafka.producer(options);
-    }
-
-    async connect() {
-        await this.pub.connect();
-    }
-
-    async send(...messages) {
-        return await this.pub.send({
-            topic: this.topic, messages
-        })
-    }
-
-    send_async(...messages) {
-        this.pub.send({
-            topic: this.topic,
-            messages
-        });
-    }
-
-    /**
-     * call flush to send all messages in the internal buffer without waiting for the linger.ms to expire.
-     * @param timeout
-     * @returns {Promise<void>}
-     */
-    async flush(timeout) {
-        await this.pub.flush({timeout});
-    }
-
-    async disconnect() {
-        await this.pub.disconnect();
+    getAdmin(options) {
+        return new Admin(this.connection, options);
     }
 }
 
-export class Sub extends AbstractSub {
-
-    static _setOption(options, alias, key, defaultValue) {
-        if (options[alias]) {
-            options[key] = options[alias];
-            delete options[alias];
-        } else {
-            options[key] = defaultValue;
-        }
-    }
-
+export class Admin extends AbstractAdmin {
     constructor(kafka, options) {
-        Sub._setOption(options, 'timeout', 'session.timeout.ms', 45000) // Best practice for higher availability in librdkafka clients prior to 1.7
-        options["auto.offset.reset"] = "earliest"
-        const {group, topic} = options
-        if (!group) {
-            options.group = 'nodejs-group'
-        }
-        assert.ok(topic)
-        super(kafka, {topic, group});
-        delete options.topic
-        delete options.group
-        this.sub = kafka.consumer(Object.assign(options, {
-            "group.id": this.group
-        }))
+        super();
+        /**
+         * @type NativeAdmin
+         */
+        this.admin = kafka.admin(options);
     }
 
     async connect() {
-        await this.sub.connect();
+        await this.admin.connect()
     }
 
-    async disconnect() {
-        await this.sub.commitOffsets();
-        await this.sub.disconnect();
+    async listTopics() {
+        return await this.admin.listTopics()
     }
 
-    /**
-     * Kafka consumers automatically acknowledge message(equivalent to commit offsets) processing upon broker acquisition
-     * By default, offsets are committed automatically by the library.
-     * To commit offsets manually, setting `enable.auto.commit` to false
-     */
-    async acknowledge() {
-        await this.sub.commitOffsets()
+    async deleteTopics(...topics) {
+        await this.admin.deleteTopics({topics})
     }
 
     /**
      *
-     * @param {function({topic, partition, message})} onMessage
-     * @param topic
+     * @param {string} topics
      */
-    async subscribe(onMessage, ...topic) {
-        await this.sub.subscribe({topics: [this.topic, ...topic]});
-        await this.sub.run({
-            eachMessage: onMessage
+    async createTopics(...topics) {
+        await this.admin.createTopics({
+            topics: topics.map(topic => ({
+                topic
+            }))
         })
     }
-}
 
+    async disconnect() {
+        await this.admin.disconnect()
+    }
+
+    async clear() {
+        const topics = await this.listTopics()
+        await this.deleteTopics(...topics)
+    }
+}

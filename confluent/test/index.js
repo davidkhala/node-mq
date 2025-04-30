@@ -3,17 +3,22 @@ import * as assert from "node:assert";
 
 describe('', function () {
     this.timeout(0)
-    const topic = "sample_data_stock_trades";
+    const endpoint = process.env.ENDPOINT
+    const apiKey = process.env.API_KEY
+    const apiSecret = process.env.API_SECRET
+    const topic = "topic";
     const key = `${Date.now()}`;
     const value = "value";
-    it('produce', async () => {
-        const endpoint = process.env.ENDPOINT
-        const apiKey = process.env.API_KEY
-        const apiSecret = process.env.API_SECRET
+    const confluent = new Confluent({
+        endpoint, apiKey, apiSecret
+    })
+    it('create topic', async () => {
+        const admin = confluent.getAdmin()
+        await admin.connect()
+        await admin.createTopics(topic)
+    })
+    it('pubsub', async () => {
 
-        const confluent = new Confluent({
-            endpoint, apiKey, apiSecret
-        })
 
         const pub = confluent.getProducer({topic})
         await pub.connect()

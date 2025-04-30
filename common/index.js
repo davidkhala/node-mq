@@ -91,6 +91,20 @@ export class Admin extends Connectable {
     }
 
     /**
+     * @abstract
+     */
+    async deleteTopics(options) {
+
+    }
+
+    /**
+     * @abstract
+     */
+    async createTopics(options) {
+
+    }
+
+    /**
      * Truncate topics
      * @abstract
      */

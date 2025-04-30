@@ -1,0 +1,16 @@
+{
+  "name": "@davidkhala/confluent-rest",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidkhala/node-mq.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
