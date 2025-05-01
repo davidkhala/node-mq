@@ -33,7 +33,7 @@ export class Sub extends AbstractSub {
     }
 
     async disconnect() {
-        await this.sub.commitOffsets();
+        await this.acknowledge();
         await this.sub.disconnect();
     }
 

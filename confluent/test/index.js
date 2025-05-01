@@ -16,6 +16,7 @@ describe('', function () {
         const admin = confluent.getAdmin()
         await admin.connect()
         await admin.createTopics(topic)
+        await admin.disconnect()
     })
     it('pubsub', async () => {
 
@@ -27,7 +28,7 @@ describe('', function () {
         const sub = confluent.getConsumer({topic})
         await sub.connect()
         const gotValue = await new Promise((resolve, reject) => {
-            sub.subscribe(async ({topic, partition, message}) => {
+            sub.subscribe(({topic, partition, message}) => {
                 const _key = message.key.toString()
                 if (key === _key) {
                     resolve(message.value)
