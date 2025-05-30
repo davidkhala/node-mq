@@ -35,10 +35,20 @@ const pretty = (msg) => {
     };
 }
 
+
+class Sub extends AbstractSub {
+    async reset(messageId = MessageId.earliest()) {
+        await this.sub.seek(messageId)
+    }
+    async disconnect() {
+        return await this.sub.close();
+    }
+}
+
 /**
  * Used for message queue mode
  */
-export class Consumer extends AbstractSub {
+export class Consumer extends Sub {
 
     constructor(pulsar, options) {
         const {topic, group} = options
@@ -59,7 +69,7 @@ export class Consumer extends AbstractSub {
      *
      * @param {Listener} [listener]
      */
-    async subscribe(listener){
+    async subscribe(listener) {
         if (listener) {
             this.options.listener = listener;
         }
@@ -90,16 +100,10 @@ export class Consumer extends AbstractSub {
         return await this.sub.acknowledgeId(message_id);
     }
 
-    async reset(messageId = MessageId.earliest()) {
-        await this.sub.seek(messageId)
-    }
 
-    async disconnect() {
-        return await this.sub.close();
-    }
 }
 
-export class Reader extends AbstractSub {
+export class Reader extends Sub {
     constructor(pulsar, options) {
         const {topic, startMessageId} = options
         super(pulsar, {topic});
@@ -126,17 +130,13 @@ export class Reader extends AbstractSub {
         this.sub = await this.pulsar.createReader(this.options)
     }
 
-    async disconnect() {
-        return await this.sub.close();
-    }
-
-
-    async next() {
-        const msg = await this.sub.readNext()
+    /**
+     *
+     * @param {number} [timeout]
+     */
+    async next(timeout) {
+        const msg = await this.sub.readNext(timeout)
         return pretty(msg)
     }
 
-    async reset(messageId = MessageId.earliest()) {
-        await this.sub.seek(messageId)
-    }
 }

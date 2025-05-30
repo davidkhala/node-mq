@@ -5,8 +5,8 @@ import * as assert from "node:assert";
 
 describe('', function () {
     this.timeout(0);
-    const pulsar = new Pulsar({domain: 'localhost'});
     const topic = 'topic';
+    const pulsar = new Pulsar({domain: 'localhost', topic});
     const message = 'message';
     let stop
     before(async () => {
@@ -14,13 +14,17 @@ describe('', function () {
         stop = await docker(manager, {});
     })
     const test_pub = async () => {
-        const producer = pulsar.getProducer(topic);
+        const producer = pulsar.getProducer();
         await producer.connect()
         await producer.send(message);
         await producer.disconnect();
     }
+    it('metadata', async ()=> {
+        const [partition] = await pulsar.partitions()
+        assert.equal(partition, 'persistent://public/default/topic')
+    })
     it('fifo', async () => {
-        const producer = pulsar.getProducer(topic);
+        const producer = pulsar.getProducer();
         await producer.connect()
         for (let i = 1; i <= 10; i++) {
             await producer.send(i.toString());
@@ -29,7 +33,7 @@ describe('', function () {
         await producer.disconnect();
 
         //
-        const consumer = pulsar.getConsumer(topic);
+        const consumer = pulsar.getConsumer();
         await consumer.subscribe()
         await consumer.reset()
 
@@ -43,7 +47,7 @@ describe('', function () {
     })
     it('sub', async () => {
 
-        const consumer = pulsar.getConsumer(topic);
+        const consumer = pulsar.getConsumer();
         await Promise.all([
             test_pub(),
             (async () => {
@@ -59,8 +63,24 @@ describe('', function () {
 
 
     })
+    it('read', async ()=> {
+        const reader = pulsar.getReader()
+        await test_pub()
+        await reader.subscribe()
+        console.debug(await reader.next())
+
+        const p1 = await reader.next(1000)
+        //FIXME Process finished with exit code -1073741819 (0xC0000005) when timeout
+        console.debug({p1})
+
+        await reader.disconnect()
+
+
+
+    })
 
     after(async () => {
+        await pulsar.disconnect()
         await stop()
     })
 
