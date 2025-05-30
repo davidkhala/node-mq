@@ -27,9 +27,8 @@ export default class MQ {
 /**
  * @abstract
  */
-export class Pub extends Connectable {
+export class Pub {
     constructor(mq, options) {
-        super();
         this.topic = options.topic;
     }
 
@@ -38,7 +37,6 @@ export class Pub extends Connectable {
      * @abstract
      */
     async send(...message) {
-
     }
 
 }
@@ -46,9 +44,8 @@ export class Pub extends Connectable {
 /**
  * @abstract
  */
-export class Sub extends Connectable {
+export class Sub {
     constructor(mq, options) {
-        super();
         this.topic = options.topic;
         this.group = options.group; // e.g. subscription in gcp pubsub, group.id for kafka
     }
@@ -65,7 +62,7 @@ export class Sub extends Connectable {
      * @abstract
      * seek to an offset, timestamp or messageId
      */
-    reset(offset) {
+    async reset(offset) {
 
     }
 

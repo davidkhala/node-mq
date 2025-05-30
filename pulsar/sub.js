@@ -47,6 +47,11 @@ export class Consumer extends AbstractSub {
          * @type Client
          */
         this.pulsar = pulsar;
+        this.options = Object.assign({
+            topic,
+            subscription: group,
+            subscriptionType: 'Exclusive',
+        }, options);
     }
 
 
@@ -54,29 +59,22 @@ export class Consumer extends AbstractSub {
      *
      * @param {Listener} [listener]
      */
-    async connect(listener) {
-        const options = {
-            topic: this.topic,
-            subscription: this.group,
-            subscriptionType: 'Exclusive',
-        }
-
+    async subscribe(listener){
         if (listener) {
-            options.listener = listener;
-            this.listener = listener;
+            this.options.listener = listener;
         }
         /**
          * @type Consumer
          */
-        this.sub = await this.pulsar.subscribe(options);
-
+        this.sub = await this.pulsar.subscribe(this.options);
     }
+
 
     /**
      * It begins with the most recently unacked message
      * To fetch history messages, you need to reset offset first by {@link reset}
      */
-    async subscribe() {
+    async next() {
         const msg = await this.sub.receive();
         return pretty(msg)
     }
@@ -109,23 +107,23 @@ export class Reader extends AbstractSub {
          * @type Client
          */
         this.pulsar = pulsar;
-        this.startMessageId = startMessageId || MessageId.earliest();
+
+        this.options = Object.assign({
+            topic,
+            startMessageId: startMessageId || MessageId.earliest()
+        }, options)
     }
 
-    async connect(listener) {
-        const options = {
-            topic: this.topic,
-            startMessageId: this.startMessageId,
-        }
+    async subscribe(listener) {
+
         if (listener) {
-            options.listener = listener;
-            this.listener = listener;
+            this.options.listener = listener;
         }
         /**
          *
          * @type NativeReader
          */
-        this.sub = await this.pulsar.createReader(options)
+        this.sub = await this.pulsar.createReader(this.options)
     }
 
     async disconnect() {
@@ -133,7 +131,7 @@ export class Reader extends AbstractSub {
     }
 
 
-    async subscribe() {
+    async next() {
         const msg = await this.sub.readNext()
         return pretty(msg)
     }

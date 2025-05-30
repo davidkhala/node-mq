@@ -30,11 +30,11 @@ describe('', function () {
 
         //
         const consumer = pulsar.getConsumer(topic);
-        await consumer.connect()
+        await consumer.subscribe()
         await consumer.reset()
 
         for (let i = 1; i <= 10; i++) {
-            const {data, id} = await consumer.subscribe();
+            const {data, id} = await consumer.next();
             assert.equal(data, i.toString())
             await consumer.acknowledge(id)
         }
@@ -48,8 +48,8 @@ describe('', function () {
             test_pub(),
             (async () => {
 
-                await consumer.connect()
-                const {data, id} = await consumer.subscribe();
+                await consumer.subscribe()
+                const {data, id} = await consumer.next();
                 assert.strictEqual(data, message);
                 console.info('id', id.toString())
                 await consumer.acknowledge(id);
