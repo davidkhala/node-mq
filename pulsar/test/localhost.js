@@ -1,6 +1,6 @@
 import Pulsar from '../index.js';
 import {ContainerManager} from "@davidkhala/docker/docker.js";
-import {docker} from "../test-utils/recipe.js";
+import {docker} from "../vendor/recipe.js";
 import * as assert from "node:assert";
 
 describe('', function () {

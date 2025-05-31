@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Insecure from '../insecure.js';
-import KafkaController from '../test-utils/testcontainers.js'
+import KafkaController from '../vendor/testcontainers.js'
 
 describe('testcontainers', function () {
     this.timeout(0);
@@ -30,7 +30,7 @@ describe('testcontainers', function () {
         const sub = client.getConsumer(topic, 'test-group')
         await sub.connect()
         await sub.subscribe()
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve) => {
             sub.run(async ({message}) => {
                 const gotValue = message.value.toString()
                 if (gotValue === value) {

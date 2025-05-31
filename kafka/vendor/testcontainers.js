@@ -1,10 +1,10 @@
 import {KafkaContainer} from "@testcontainers/kafka";
-import {Controller} from "@davidkhala/db/vendor/testcontainers.js"
+import {Controller} from "@davidkhala/light/vendor/testcontainers.js"
 
 export default class KafkaController extends Controller {
     constructor() {
         super();
-        this.container = new KafkaContainer().withKraft();
+        this.container = new KafkaContainer('confluentinc/cp-kafka:latest').withKraft();
     }
 
     get port() {
