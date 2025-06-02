@@ -2,16 +2,17 @@
   "name": "@davidkhala/rabbitmq",
   "version": "0.1.0",
   "dependencies": {
-    "amqplib": "latest",
-    "@davidkhala/db": "latest"
+    "@davidkhala/db": "latest",
+    "amqplib": "latest"
   },
   "scripts": {
     "test": "mocha test"
   },
   "devDependencies": {
-    "mocha": "latest",
     "@davidkhala/container": "latest",
-    "@davidkhala/docker": "latest"
+    "@davidkhala/docker": "latest",
+    "@testcontainers/rabbitmq": "^11.0.0",
+    "mocha": "latest"
   },
   "publishConfig": {
     "access": "public"

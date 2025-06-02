@@ -2,7 +2,7 @@ import AMPQLibrary from 'amqplib';
 import DB from '@davidkhala/db';
 
 export class AMQP extends DB {
-	constructor({domain = 'localhost', port = 5672, password, username, dialect = 'amqp', name = username}, connectionString, logger) {
+	constructor({domain = 'localhost', port = 5672, password, username, dialect = 'amqp', name}, connectionString, logger) {
 		super({domain, username, password, port, dialect, name}, connectionString, logger);
 	}
 
