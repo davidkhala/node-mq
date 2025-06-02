@@ -30,6 +30,20 @@ describe('docker:bitnami, Auth', function () {
         await stop();
     });
 });
+describe('docker:bitnami, tls', function () {
+    this.timeout(0);
+    const bitnamiContainer = new AMQP({
+        username, password,
+        port: 5671, dialect:"amqps"
+    });
+    const manager = new ContainerManager();
+    it('connect', async () => {
+        const stop = await docker(manager, {username, password, tls:false});
+        // await bitnamiContainer.connect()
+        await stop()
+    })
+
+})
 import {Controller} from '../vendor/testcontainers.js'
 
 describe('testcontainers:admin', function () {
@@ -50,4 +64,5 @@ describe('testcontainers:admin', function () {
         await connect.disconnect()
         await c.stop()
     })
+
 })

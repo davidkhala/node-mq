@@ -3,7 +3,7 @@ import {Controller as C} from '@davidkhala/db/vendor/testcontainers.js'
 import {AMQP} from '../index.js'
 
 export class Controller extends C {
-    constructor(username, password, tls) {
+    constructor(username, password) {
         super();
         this.container = new RabbitMQContainer('rabbitmq:latest')
         if (username) {
@@ -14,12 +14,6 @@ export class Controller extends C {
             this.username = username
             this.password = password
         }
-        this.tls = tls
-        if (tls) {
-            // RABBITMQ_SSL_CERT_FILE=
-            // RABBITMQ_SSL_KEY_FILE
-            // RABBITMQ_SSL_CA_FILE
-        }
 
     }
 
@@ -28,10 +22,6 @@ export class Controller extends C {
     }
 
     get connectionString() {
-        if (this.tls) {
-            // FIXME No test coverage in https://github.com/testcontainers/testcontainers-node/blob/main/packages/modules/rabbitmq/src/rabbitmq-container.test.ts
-            return this.handler.getAmqpsUrl()
-        }
         return this.handler.getAmqpUrl()
     }
 
@@ -40,14 +30,14 @@ export class Controller extends C {
      * @returns {Promise<AMQP>}
      */
     async getConnection() {
-        const {port, username, password, tls} = this;
+        const {port, username, password} = this;
         const options = {
             domain: 'localhost',
-            dialect: tls ? 'amqps' : 'amqp',
+            dialect: 'amqp',
             port
         }
         if (username) {
-            Object.assign(options, { username, password})
+            Object.assign(options, {username, password})
         }
         const amqp = new AMQP(options)
         await amqp.connect()
