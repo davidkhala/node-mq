@@ -11,7 +11,7 @@
   "devDependencies": {
     "@davidkhala/container": "latest",
     "@davidkhala/docker": "latest",
-    "@testcontainers/rabbitmq": "^11.0.0",
+    "@testcontainers/rabbitmq": "latest",
     "mocha": "latest"
   },
   "publishConfig": {

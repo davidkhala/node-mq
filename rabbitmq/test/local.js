@@ -4,8 +4,10 @@ import {docker} from '../vendor/recipe.js';
 import {ContainerManager} from '@davidkhala/docker/docker.js';
 
 const topic = 'tasks';
-const username = 'test';
-const password = 'bitnami';
+import {bitnami, default_user, default_pass} from '../const.js'
+
+const username = bitnami.username;
+const password = bitnami.password;
 describe('docker:bitnami, Auth', function () {
     this.timeout(0);
     const bitnamiContainer = new AMQP({username, password});
@@ -34,11 +36,11 @@ describe('docker:bitnami, tls', function () {
     this.timeout(0);
     const bitnamiContainer = new AMQP({
         username, password,
-        port: 5671, dialect:"amqps"
+        port: 5671, dialect: "amqps"
     });
     const manager = new ContainerManager();
     it('connect', async () => {
-        const stop = await docker(manager, {username, password, tls:false});
+        const stop = await docker(manager, {username, password, tls: false});
         // await bitnamiContainer.connect()
         await stop()
     })
@@ -64,5 +66,18 @@ describe('testcontainers:admin', function () {
         await connect.disconnect()
         await c.stop()
     })
+})
 
+describe('BM, tls ', function () {
+    this.timeout(0)
+    if (process.env.CI) {
+        return
+    }
+    it('', async () => {
+        const queue = new AMQP({
+            username: default_user, password: default_pass, tls: true
+        });
+        await queue.connect()
+        await queue.disconnect()
+    })
 })
