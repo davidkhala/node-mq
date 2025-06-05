@@ -32,16 +32,19 @@ describe('docker:bitnami, Auth', function () {
         await stop();
     });
 });
-describe('docker:bitnami, tls', function () {
+describe('docker:davidkhala/rabbitmq (tls)', function () {
     this.timeout(0);
-    const bitnamiContainer = new AMQP({
-        username, password,
-        port: 5671, dialect: "amqps"
+    const tls = true
+    const username = default_user
+    const password = default_pass
+    const amqps = new AMQP({
+        username, password, tls
     });
     const manager = new ContainerManager();
     it('connect', async () => {
-        const stop = await docker(manager, {username, password, tls: false});
-        // await bitnamiContainer.connect()
+        const stop = await docker(manager, {username, password, tls});
+        await amqps.connect()
+        await amqps.disconnect()
         await stop()
     })
 
@@ -65,19 +68,5 @@ describe('testcontainers:admin', function () {
         const connect = await c.getConnection()
         await connect.disconnect()
         await c.stop()
-    })
-})
-
-describe('BM, tls ', function () {
-    this.timeout(0)
-    if (process.env.CI) {
-        return
-    }
-    it('', async () => {
-        const queue = new AMQP({
-            username: default_user, password: default_pass, tls: true
-        });
-        await queue.connect()
-        await queue.disconnect()
     })
 })

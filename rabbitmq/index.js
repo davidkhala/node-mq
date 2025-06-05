@@ -1,6 +1,5 @@
 import AMPQLibrary from 'amqplib';
 import DB from '@davidkhala/db';
-import * as fs from "fs";
 
 export class AMQP extends DB {
     constructor({
