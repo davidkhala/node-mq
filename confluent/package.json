@@ -16,7 +16,9 @@
     "@davidkhala/pubsub": "latest"
   },
   "devDependencies": {
-    "mocha": "latest"
+    "mocha": "latest",
+    "@davidkhala/container": "latest",
+    "@davidkhala/docker": "latest"
   },
   "type": "module"
 }
